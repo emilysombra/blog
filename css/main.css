@@ -1,7 +1,12 @@
+body{
+    background: lightgray;
+}
+
 #botao-form-pesquisa{
     color:white;
 }
 
-body{
-    background: lightgray;
+#rodape{
+    background: #133d06;
+    color:white;
 }
