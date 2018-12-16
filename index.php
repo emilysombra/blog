@@ -1,69 +1,17 @@
-<!DOCTYPE html>
-
-<html lang="pt-br">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="keywords" content="Ciência, Computação, Divulgação, UECE, Universidade, Ceará, Academia">
-    <meta name="description" content="The Science's on the Table: Blog de Divulgação Científica especializado em Ciência da Computação">
-    <meta name="robots" content="index, follow">
-    <meta name="author" content="Marcos Sombra, Bia Vasconcelos">
-
-    <!-- CSS do Bootstrap (CDN) -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
-    <!-- CSS próprio -->
-    <link href="css/main.css" rel="stylesheet" type="text/css">
-
+<?php include "includes/head.php" ?>
     <title>The Science's on the Table - Página Inicial</title>
 </head>
 
 <!-- corpo do site -- >
 <body>
     <!-- menu superior (fixado) -->
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #133d06">
-        <!-- marca do blog -->
-        <span class="navbar-brand mb-0 h1">The Science's on the Table</span>
-        <!-- botão dropdown (para layout responsivo -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <!-- div do menu -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <!-- lista de itens do menu -->
-            <ul class="navbar-nav mr-auto">
-                <li class="navbar-nav mr-auto">
-                    <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Sobre</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contato</a>
-                </li>
-            </ul>
-
-            <!-- form de busca -->
-            <form class="form-inline">
-                <input class="form-control mr-sm-2" type="search" placeholder="Pesquisar" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="botao-form-pesquisa">Pesquisar</button>
-            </form>
-        </div>
-    </nav>
+<?php include "includes/menu.php"  ?>
     <!-- fim do menu superior (fixado) -->
 
 
 
     <!-- inicio div de chamada do site -->
-    <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-            <h1 class="display-4">The Science's on the Table</h1>
-            <p class="lead">O maior blog de Ciência da Computação do meu bairro!</p>
-        </div>
-    </div>
+<?php include "includes/chamada.php"  ?>
     <!-- fim div de chamada do site -->
 
 
@@ -148,17 +96,4 @@
 
 
     <!-- rodapé do site -->
-    <footer class="page-footer font-small" id=rodape>
-        <div class="footer-copyright text-center py-3">
-            © 2018 Copyright: The Science is on the Table
-        </div>
-    </footer>
-
-
-    <!-- JS do jQuery + Popper.js + Bootstrap (CDN) -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-</body>
-
-</html>
+<?php include "includes/rodape.php" ?>
