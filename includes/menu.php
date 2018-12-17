@@ -10,11 +10,11 @@
             <!-- lista de itens do menu -->
             <ul class="navbar-nav mr-auto">
                 <li class="navbar-nav mr-auto">
-                    <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Sobre</a>
+                    <a class="nav-link" href="sobre.php">Sobre</a>
                 </li>
 
                 <li class="nav-item">
