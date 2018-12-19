@@ -1,5 +1,5 @@
 <?php include "includes/head.php" ?>
-    <title>The Science's on the Table - Página Inicial</title>
+    <title>The Science's on the Table - Sobre</title>
 </head>
 
 <!-- corpo do site -- >
@@ -26,7 +26,7 @@
             <!-- sobre os autores -->
             <section class="team-section my-5">
                 <h2 class="h1-responsive font-weight-bold text-center my-5">Nossa Equipe</h2>
-                <p class="grey-text text-center w-responsive mx-auto mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, error amet numquam iure provident voluptate esse quasi, veritatis totam voluptas nostrum quisquam eum porro a pariatur veniam.</p> 
+                <p class="grey-text text-center w-responsive mx-auto mb-5">Estes são os criadores e autores do blog:</p> 
 
                 <!-- exibir autores em linha -->
                 <div class="row text-center text-md-left">

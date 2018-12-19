@@ -11,6 +11,9 @@ body{
 }
 
 #rodape{
-    background: #133d06;
     color:white;
+}
+
+#rodape-copyright{
+    background: #133d06;
 }
