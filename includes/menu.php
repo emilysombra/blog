@@ -1,4 +1,4 @@
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #133d06">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark" style="background-color: #133d06">
         <!-- marca do blog -->
         <span class="navbar-brand mb-0 h1">The Science's on the Table</span>
         <!-- botão dropdown (para layout responsivo -->

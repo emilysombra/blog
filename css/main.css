@@ -17,3 +17,9 @@ body{
 #rodape-copyright{
     background: #133d06;
 }
+
+.form-area{
+    padding: 10px 40px 60px;
+    margin: 10px 0px 60px;
+    border: 1px solid GREY;
+}
