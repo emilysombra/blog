@@ -10,15 +10,19 @@
             <!-- lista de itens do menu -->
             <ul class="navbar-nav mr-auto">
                 <li class="navbar-nav mr-auto">
-                    <a class="nav-link" href="index.php">Home<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="#">Início<span class="sr-only">(current)</span></a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="sobre.php">Sobre</a>
+                    <a class="nav-link" href="#">Cadastrar Post</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="contato.php">Contato</a>
+                    <a class="nav-link" href="#">Editar Post</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Exibir Site</a>
                 </li>
             </ul>
 
