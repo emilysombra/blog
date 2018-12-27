@@ -23,10 +23,11 @@
                 <!-- exibir autores em linha -->
                 <div class="row text-center text-md-left">
                     {% for usuario in usuarios %}
+                    {% set foto = "/static/{}".format(usuario[9]) %}
                     <div class="col-xl-6 col-lg-12 mb-5 d-md-flex justify-content-between">
                         <!-- foto -->
                         <div class="avatar mb-md-0 mb-4 mx-4">
-                            <img src="{{url_for('.static', filename='img/bia.jpg')}}" class="img-fluid rounded z-depth-1" alt="{{ usuario[1] }} {{ usuario[2] }}" title="{{ usuario[1] }} {{ usuario[2] }}">
+                            <img src="{{foto}}" class="img-fluid rounded z-depth-1" alt="{{ usuario[1] }} {{ usuario[2] }}" title="{{ usuario[1] }} {{ usuario[2] }}">
                         </div>
                         <!-- descrição -->
                         <div class="mx-4">
