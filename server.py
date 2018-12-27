@@ -1,6 +1,27 @@
 from flask import Flask, render_template
+import psycopg2
+import pickle
 
+
+class Database:
+    def __init__(self):
+        comando = pickle.load(open('loginbd.pkl', 'rb'))
+
+        self.conn = psycopg2.connect(comando, sslmode='require')
+        self.cur = self.conn.cursor()
+
+
+db = Database()
 app = Flask(__name__)
+
+
+# funções gerais
+
+
+def get_usuarios():
+    query = 'SELECT * FROM usuarios ORDER BY nome;'
+    db.cur.execute(query)
+    return db.cur.fetchall()
 
 
 # paginas user
@@ -13,7 +34,8 @@ def index():
 
 @app.route('/sobre/')
 def sobre():
-    return render_template('sobre.html')
+    usuarios = get_usuarios()
+    return render_template('sobre.html', usuarios=usuarios)
 
 
 @app.route('/contato/')
@@ -32,6 +54,11 @@ def adm_index():
 @app.route('/admin/novo-post/')
 def adm_novo_post():
     return render_template('admin/novo-post.html')
+
+
+@app.route('/admin/usuarios/')
+def adm_usuarios():
+    return str(get_usuarios())
 
 
 @app.route('/admin/login/')

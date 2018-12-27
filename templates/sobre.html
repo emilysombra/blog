@@ -22,59 +22,33 @@
 
                 <!-- exibir autores em linha -->
                 <div class="row text-center text-md-left">
-                    <!-- autor 1 -->
+                    {% for usuario in usuarios %}
                     <div class="col-xl-6 col-lg-12 mb-5 d-md-flex justify-content-between">
                         <!-- foto -->
                         <div class="avatar mb-md-0 mb-4 mx-4">
-                            <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(20).jpg" class="rounded z-depth-1" alt="Imagem Ilustrativa" title="Imagem Ilustrativa">
+                            <img src="{{url_for('.static', filename='img/bia.jpg')}}" class="img-fluid rounded z-depth-1" alt="{{ usuario[1] }} {{ usuario[2] }}" title="{{ usuario[1] }} {{ usuario[2] }}">
                         </div>
                         <!-- descrição -->
                         <div class="mx-4">
-                            <h4 class="font-weight-bold mb-3">Beatriz Vasconcelos</h4>
-                            <h6 class="font-weight-bold grey-text mb-3">Cientista da Computação</h6>
-                            <p class="grey-text">Pesquisa sobre Segurança da Informação. Ex-monitora de Matemática Discreta, atualmente é bolsista do Programa de Educação Tutorial.</p>
+                            <h4 class="font-weight-bold mb-3">{{ usuario[1] }} {{ usuario[2] }}</h4>
+                            <h6 class="font-weight-bold grey-text mb-3">{{ usuario[8] }}</h6>
+                            <p class="grey-text">{{ usuario[7] }}</p>
                             <!-- redes sociais -->
-                            <a class="fa-lg fb-ic" href="http://fb.com/biavasconceloss" target="_blank" style="color: #133d06;">
+                            <a class="fa-lg fb-ic" href="{{ usuario[3] }}" target="_blank" style="color: #133d06;">
                                 <i class="fab fa-facebook"></i>
                             </a>
-                            <a class="fa-lg ins-ic" href="http://instagram.com/biavasconcelos013" target="_blank" style="color: #133d06;">
+                            <a class="fa-lg ins-ic" href="{{ usuario[4] }}" target="_blank" style="color: #133d06;">
                                 <i class="fab fa-instagram"></i>
                             </a>
-                            <a class="fa-lg git-ic" href="http://github.com/BeatrizVasconcelos" target="_blank" style="color: #133d06;">
+                            <a class="fa-lg git-ic" href="{{ usuario[5] }}" target="_blank" style="color: #133d06;">
                                 <i class="fab fa-github"></i>
                             </a>
-                            <a class="fa-lg li-ic" href="http://linkedin.com/in/beatriz-vasconcelos" target="_blank" style="color: #133d06;">
+                            <a class="fa-lg li-ic" href="{{ usuario[6] }}" target="_blank" style="color: #133d06;">
                                 <i class="fab fa-linkedin-in"></i>
                             </a>
                         </div>
                     </div>
-
-                    <!-- autor 2 -->
-                    <div class="col-xl-6 col-lg-12 mb-5 d-md-flex justify-content-between">
-                        <!-- foto -->
-                        <div class="avatar mb-md-0 mb-4 mx-4">
-                            <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(20).jpg" class="rounded z-depth-1" alt="Imagem Ilustrativa" title="Imagem Ilustrativa">
-                        </div>
-                        <!-- descrição -->
-                        <div class="mx-4">
-                            <h4 class="font-weight-bold mb-3">Marcos Sombra</h4>
-                            <h6 class="font-weight-bold grey-text mb-3">Cientista da Computação</h6>
-                            <p class="grey-text">Pesquisa sobre Inteligência Artificial. Atualmente é bolsista do Programa de Educação Tutorial.</p>
-                            <!-- redes sociais -->
-                            <a class="fa-lg fb-ic" href="http://fb.com/maarkinvinicius" target="_blank" style="color: #133d06;">
-                                <i class="fab fa-facebook"></i>
-                            </a>
-                            <a class="fa-lg ins-ic" href="http://instagram.com/mvsombra" target="_blank" style="color: #133d06;">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                            <a class="fa-lg git-ic" href="http://github.com/MarkosVS" target="_blank" style="color: #133d06;">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            <a class="fa-lg li-ic" href="http://linkedin.com/in/marcos-sombra" target="_blank" style="color: #133d06;">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div> 
             </section>
         </div>
