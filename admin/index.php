@@ -1,5 +1,5 @@
 <?php include "includes/head.php" ?>
-    <title>The Science's on the Table - Página Inicial</title>
+    <title>The Science's on the Table - Painel de Administrador</title>
 </head>
 
 <!-- corpo do site -- >
@@ -37,7 +37,9 @@
                         <h3 class="font-weight-bold mb-3">[Título do Post]</h3>
                         <p class="dark-grey-text">Spicy jalapeno bacon ipsum dolor amet strip steak frankfurter chuck capicola leberkas t-bone. Tri-tip ball tip pastrami, ham hock porchetta tongue fatback bresaola chuck flank cupim capicola prosciutto shankle frankfurter. Brisket jerky fatback meatball. Hamburger rump pork biltong, pig fatback chicken tri-tip ball tip alcatra strip steak ham hock short loin swine...</p>
                         <p>Publicado por: <a class="font-weight-bold">Fulano de Tal</a>, 01/01/1970</p>
-                        <a class="btn btn-success" id="botao-post-completo" role="button">Ver Mais</a>
+                        <a class="btn btn-success" style="color:white;" role="button">Ver Mais</a>
+                        <a class="btn btn-info" style="color:white;" role="button">Editar</a>
+                        <a class="btn btn-danger" style="color:white;" role="button">Excluir</a>
                     </div>
                     <!-- fim div do texto -->
                 </div>
@@ -59,7 +61,9 @@
                         <h3 class="font-weight-bold mb-3">[Título do Post]</h3>
                         <p class="dark-grey-text">Spicy jalapeno bacon ipsum dolor amet strip steak frankfurter chuck capicola leberkas t-bone. Tri-tip ball tip pastrami, ham hock porchetta tongue fatback bresaola chuck flank cupim capicola prosciutto shankle frankfurter. Brisket jerky fatback meatball. Hamburger rump pork biltong, pig fatback chicken tri-tip ball tip alcatra strip steak ham hock short loin swine...</p>
                         <p>Publicado por: <a class="font-weight-bold">Fulano de Tal</a>, 01/01/1970</p>
-                        <a class="btn btn-success" id="botao-post-completo" role="button">Ver Mais</a>
+                        <a class="btn btn-success" style="color:white;" role="button">Ver Mais</a>
+                        <a class="btn btn-info" style="color:white;" role="button">Editar</a>
+                        <a class="btn btn-danger" style="color:white;" role="button">Excluir</a>
                     </div>
                     <!-- fim div do texto -->
                 </div>
@@ -81,7 +85,9 @@
                         <h3 class="font-weight-bold mb-3">[Título do Post]</h3>
                         <p class="dark-grey-text">Spicy jalapeno bacon ipsum dolor amet strip steak frankfurter chuck capicola leberkas t-bone. Tri-tip ball tip pastrami, ham hock porchetta tongue fatback bresaola chuck flank cupim capicola prosciutto shankle frankfurter. Brisket jerky fatback meatball. Hamburger rump pork biltong, pig fatback chicken tri-tip ball tip alcatra strip steak ham hock short loin swine...</p>
                         <p>Publicado por: <a class="font-weight-bold">Fulano de Tal</a>, 01/01/1970</p>
-                        <a class="btn btn-success" id="botao-post-completo" role="button">Ver Mais</a>
+                        <a class="btn btn-success" style="color:white;" role="button">Ver Mais</a>
+                        <a class="btn btn-info" style="color:white;" role="button">Editar</a>
+                        <a class="btn btn-danger" style="color:white;" role="button">Excluir</a>
                     </div>
                     <!-- fim div do texto -->
                 </div>
@@ -96,4 +102,4 @@
 
 
     <!-- rodapé do site -->
-<?php include "includes/rodape.php" ?>
+<?php include "../includes/rodape.php" ?>

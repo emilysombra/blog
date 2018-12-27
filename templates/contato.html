@@ -1,21 +1,13 @@
-<?php include "includes/head.php" ?>
+{% include "includes/head.html" %}
+
     <title>The Science's on the Table - Contato</title>
 </head>
 
-<!-- corpo do site -- >
 <body>
-    <!-- menu superior (fixado) -->
-<?php include "includes/menu.php"  ?>
-    <!-- fim do menu superior (fixado) -->
+{% include "includes/menu.html" %}
 
+{% include "includes/chamada.html" %}
 
-
-    <!-- inicio div de chamada do site -->
-<?php include "includes/chamada.php"  ?>
-    <!-- fim div de chamada do site -->
-
-
-    <!-- (new) inicio div de corpo do site -->
     <div class="jumbotron-fluid">
         <div class="container">
             <!-- form de contato -->
@@ -44,11 +36,10 @@
             </div>
         </div>
     </div>
-    <!-- (new) fim div de corpo do site -->
 
-
-    <!-- rodapé do site -->
-<?php include "includes/rodape.php" ?>
+{% include "includes/rodape.html" %}
 
 <!-- script de caracteres restantes -->
-<script type="text/javascript" src="js/caracteres-restantes.js"></script>
+{% block scripts %}
+    <script src="{{url_for('.static', filename='js/caracteres-restantes.js')}}"></script>
+{% endblock %}

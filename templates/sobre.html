@@ -1,21 +1,13 @@
-<?php include "includes/head.php" ?>
+{% include "includes/head.html" %}
+
     <title>The Science's on the Table - Sobre</title>
 </head>
 
-<!-- corpo do site -- >
 <body>
-    <!-- menu superior (fixado) -->
-<?php include "includes/menu.php"  ?>
-    <!-- fim do menu superior (fixado) -->
+{% include "includes/menu.html" %}
 
+{% include "includes/chamada.html" %}
 
-
-    <!-- inicio div de chamada do site -->
-<?php include "includes/chamada.php"  ?>
-    <!-- fim div de chamada do site -->
-
-
-    <!-- (new) inicio div de corpo do site -->
     <div class="jumbotron-fluid">
         <div class="container">
             <!-- sobre o blog -->
@@ -42,16 +34,16 @@
                             <h6 class="font-weight-bold grey-text mb-3">Cientista da Computação</h6>
                             <p class="grey-text">Pesquisa sobre Segurança da Informação. Ex-monitora de Matemática Discreta, atualmente é bolsista do Programa de Educação Tutorial.</p>
                             <!-- redes sociais -->
-                            <a class="p-2 fa-lg fb-ic" href="#">
+                            <a class="fa-lg fb-ic" href="http://fb.com/biavasconceloss" target="_blank" style="color: #133d06;">
                                 <i class="fab fa-facebook"></i>
                             </a>
-                            <a class="p-2 fa-lg ins-ic" href="#">
+                            <a class="fa-lg ins-ic" href="http://instagram.com/biavasconcelos013" target="_blank" style="color: #133d06;">
                                 <i class="fab fa-instagram"></i>
                             </a>
-                            <a class="p-2 fa-lg git-ic" href="#">
+                            <a class="fa-lg git-ic" href="http://github.com/BeatrizVasconcelos" target="_blank" style="color: #133d06;">
                                 <i class="fab fa-github"></i>
                             </a>
-                            <a class="p-2 fa-lg li-ic" href="#">
+                            <a class="fa-lg li-ic" href="http://linkedin.com/in/beatriz-vasconcelos" target="_blank" style="color: #133d06;">
                                 <i class="fab fa-linkedin-in"></i>
                             </a>
                         </div>
@@ -69,16 +61,16 @@
                             <h6 class="font-weight-bold grey-text mb-3">Cientista da Computação</h6>
                             <p class="grey-text">Pesquisa sobre Inteligência Artificial. Atualmente é bolsista do Programa de Educação Tutorial.</p>
                             <!-- redes sociais -->
-                            <a class="p-2 fa-lg fb-ic" href="#">
+                            <a class="fa-lg fb-ic" href="http://fb.com/maarkinvinicius" target="_blank" style="color: #133d06;">
                                 <i class="fab fa-facebook"></i>
                             </a>
-                            <a class="p-2 fa-lg ins-ic" href="#">
+                            <a class="fa-lg ins-ic" href="http://instagram.com/mvsombra" target="_blank" style="color: #133d06;">
                                 <i class="fab fa-instagram"></i>
                             </a>
-                            <a class="p-2 fa-lg git-ic" href="#">
+                            <a class="fa-lg git-ic" href="http://github.com/MarkosVS" target="_blank" style="color: #133d06;">
                                 <i class="fab fa-github"></i>
                             </a>
-                            <a class="p-2 fa-lg li-ic" href="#">
+                            <a class="fa-lg li-ic" href="http://linkedin.com/in/marcos-sombra" target="_blank" style="color: #133d06;">
                                 <i class="fab fa-linkedin-in"></i>
                             </a>
                         </div>
@@ -87,8 +79,5 @@
             </section>
         </div>
     </div>
-    <!-- (new) fim div de corpo do site -->
 
-
-    <!-- rodapé do site -->
-<?php include "includes/rodape.php" ?>
+{% include "includes/rodape.html" %}
