@@ -57,7 +57,8 @@ def contato():
 
 @app.route('/admin/')
 def adm_index():
-    return render_template('admin/index.html')
+    posts = get_posts()
+    return render_template('admin/index.html', posts=posts)
 
 
 @app.route('/admin/novo-post/')
