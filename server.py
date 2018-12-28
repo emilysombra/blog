@@ -24,12 +24,21 @@ def get_usuarios():
     return db.cur.fetchall()
 
 
+def get_posts():
+    q = "SELECT p.id, titulo, data, imagem, CONCAT(nome, ' ', sobrenome) " \
+        "AS autor, texto, ativo FROM posts as p INNER JOIN usuarios as u " \
+        "ON p.autor=u.id WHERE ativo=1 ORDER BY p.id;"
+    db.cur.execute(q)
+    return db.cur.fetchall()
+
+
 # paginas user
 
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    posts = get_posts()
+    return render_template('index.html', posts=posts)
 
 
 @app.route('/sobre/')
