@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import psycopg2
 import pickle
+import os
 
 
 class Database:
@@ -13,9 +14,22 @@ class Database:
 
 db = Database()
 app = Flask(__name__)
+app_root = os.path.dirname(os.path.abspath(__file__))
 
 
 # funções gerais
+
+
+def inserir_post(titulo, autor, data, img, texto, ativo):
+    q = "SELECT id from usuarios WHERE nome='{}' AND sobrenome='{}';"
+    q = q.format(autor.split()[0], autor.split()[1])
+    db.cur.execute(q)
+    autor = db.cur.fetchall()[0][0]
+
+    q = "INSERT INTO posts (titulo, autor, data, imagem, texto, ativo) " \
+        "VALUES ('{}', {}, '{}', '{}', '{}', {});"
+    q = q.format(titulo, autor, data, img, texto, ativo)
+    db.cur.execute(q)
 
 
 def get_usuarios():
@@ -27,7 +41,8 @@ def get_usuarios():
 def get_posts():
     q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
         "CONCAT(nome, ' ', sobrenome), texto, ativo FROM posts as p " \
-        "INNER JOIN usuarios as u ON p.autor=u.id WHERE ativo=1 ORDER BY p.id;"
+        "INNER JOIN usuarios as u ON p.autor=u.id WHERE ativo=1 " \
+        "ORDER BY p.id desc;"
     db.cur.execute(q)
     return db.cur.fetchall()
 
@@ -61,9 +76,35 @@ def adm_index():
     return render_template('admin/index.html', posts=posts)
 
 
-@app.route('/admin/novo-post/')
+@app.route('/admin/novo-post/', methods=['POST', 'GET'])
 def adm_novo_post():
-    return render_template('admin/novo-post.html')
+    if(request.method == 'POST'):
+        from datetime import datetime
+        alvo = os.path.join(app_root, 'static/img/posts/')
+
+        titulo = request.form['titulo']
+
+        autor = request.form['autor']
+
+        agr = str(datetime.now())
+        data = (agr.split(' ')[0]).split('-')[1]
+        data += ('/' + (agr.split(' ')[0]).split('-')[2])
+        data += ('/' + (agr.split(' ')[0]).split('-')[0])
+
+        img = request.files['img']
+        nome_img = img.filename
+        destino = '/'.join([alvo, nome_img])
+        img.save(destino)
+        img = 'img/posts/' + nome_img
+
+        texto = request.form['texto']
+
+        ativo = len(request.form.getlist('ativo'))
+
+        inserir_post(titulo, autor, data, img, texto, ativo)
+        return render_template('admin/novo-post.html', msg=1)
+    else:
+        return render_template('admin/novo-post.html', msg=0)
 
 
 @app.route('/admin/usuarios/')

@@ -20,12 +20,25 @@
         <div class="container">
             <!-- form de post novo -->
             <div class="form-area">
-                <form role="form">
+                <form role="form" method="post" enctype="multipart/form-data">
                     <h2 class="h1-responsive font-weight-bold text-center my-5">Novo Post</h2>
+                    {% if msg == 1 %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        Post cadastrado com sucesso!
+                    </div>
+                    {% endif %}
                     <!-- campo título-->
                     <div class="form-group">
                         <label for="titulo">Título do Post:</label>
                         <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Título" required>
+                    </div>
+                    <!-- campo autor-->
+                    <div class="form-group">
+                        <label for="autor">Autor:</label>
+                        <input type="text" class="form-control" id="autor" name="autor" placeholder="Autor" value="Marcos Sombra" required readonly>
                     </div>
                     <!-- campo imagem-->
                     <div class="form-group">
@@ -34,11 +47,16 @@
                     </div>
                     <!-- campo post -->
                     <div class="form-group">
-                        <textarea class="form-control" type="textarea" id="texto" placeholder="Conteúdo do Post" rows="7"></textarea>
+                        <textarea class="form-control" type="textarea" name="texto" id="texto" placeholder="Conteúdo do Post" rows="7"></textarea>
                         <span class="help-block">
                     </div>
+                    <!-- campo ativo-->
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="ativo" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck1">Post Visível</label>
+                    </div>
                     <!-- botão de envio -->
-                    <button type="button" id="enviar" name="enviar" class="btn btn-success pull-right">Enviar</button>
+                    <button type="submit" id="enviar" name="enviar" class="btn btn-success pull-right">Enviar</button>
                 </form>
 
             </div>
