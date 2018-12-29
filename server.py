@@ -39,11 +39,15 @@ def get_usuarios():
     return db.cur.fetchall()
 
 
-def get_posts():
+def get_posts(active_only=True):
     q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
         "CONCAT(nome, ' ', sobrenome), texto, ativo FROM posts as p " \
-        "INNER JOIN usuarios as u ON p.autor=u.id WHERE ativo=1 " \
+        "INNER JOIN usuarios as u ON p.autor=u.id {}" \
         "ORDER BY p.id desc;"
+    if(active_only):
+        q = q.format('WHERE ativo=1 ')
+    else:
+        q = q.format('')
     db.cur.execute(q)
     return db.cur.fetchall()
 
@@ -73,7 +77,7 @@ def contato():
 
 @app.route('/admin/')
 def adm_index():
-    posts = get_posts()
+    posts = get_posts(False)
     return render_template('admin/index.html', posts=posts)
 
 
