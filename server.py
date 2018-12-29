@@ -30,6 +30,7 @@ def inserir_post(titulo, autor, data, img, texto, ativo):
         "VALUES ('{}', {}, '{}', '{}', '{}', {});"
     q = q.format(titulo, autor, data, img, texto, ativo)
     db.cur.execute(q)
+    db.conn.commit()
 
 
 def get_usuarios():
