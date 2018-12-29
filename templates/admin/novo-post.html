@@ -1,5 +1,7 @@
 {% include "admin/includes/head.html" %}
     <title>The Science's on the Table - Novo Post</title>
+    <!-- summernote css -->
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
 </head>
 
 <!-- corpo do site -- >
@@ -28,6 +30,13 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                         Post cadastrado com sucesso!
+                    </div>
+                    {% elif msg == 2%}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        Formato de arquivo não suportado! Formatos aceitos: .jpg, .jpeg e .png
                     </div>
                     {% endif %}
                     <!-- campo título-->
@@ -67,3 +76,12 @@
 
     <!-- rodapé do site -->
 {% include "includes/rodape.html" %}
+<!-- summernote js -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
+<script>
+    $('#texto').summernote({
+        placeholder: 'Conteúdo do Post',
+        tabsize: 4,
+        height: 150
+    });
+</script>

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from werkzeug.utils import secure_filename as secure
 import psycopg2
 import pickle
 import os
@@ -18,6 +19,11 @@ app_root = os.path.dirname(os.path.abspath(__file__))
 
 
 # funções gerais
+
+
+def formato_permitido(nome):
+    EXTENSOES = set(['png', 'jpg', 'jpeg'])
+    return '.' in nome and nome.rsplit('.', 1)[1].lower() in EXTENSOES
 
 
 def inserir_post(titulo, autor, data, img, texto, ativo):
@@ -97,7 +103,9 @@ def adm_novo_post():
         data += ('/' + (agr.split(' ')[0]).split('-')[0])
 
         img = request.files['img']
-        nome_img = img.filename
+        nome_img = secure(img.filename)
+        if(not formato_permitido(nome_img)):
+            return render_template('admin/novo-post.html', msg=2)
         destino = '/'.join([alvo, nome_img])
         img.save(destino)
         img = 'img/posts/' + nome_img
