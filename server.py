@@ -147,7 +147,7 @@ def adm_usuarios():
 @app.route('/admin/login/', methods=['POST', 'GET'])
 def adm_login():
     if('user' in session):
-        return redirect('/admin/index/')
+        return redirect('/admin/')
     if(request.method == 'POST'):
         session.pop('user', None)
 
