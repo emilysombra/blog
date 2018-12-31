@@ -6,4 +6,5 @@ MarkupSafe==1.1.0
 Werkzeug==0.14.1
 gunicorn==19.9.0
 psycopg2-binary==2.7.5
-argon2-cffi=18.3.0
+argon2==0.1.10
+argon2-cffi==18.3.0
