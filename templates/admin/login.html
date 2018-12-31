@@ -20,8 +20,16 @@
         <div class="container">
             <!-- form de post novo -->
             <div class="form-area">
-                <form role="form">
+                <form role="form" method="post">
                     <h2 class="h1-responsive font-weight-bold text-center my-5">Login</h2>
+                    {% if msg == 1 %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        E-mail ou senha incorretos
+                    </div>
+                    {% endif %}
                     <!-- campo email -->
                     <div class="form-group">
                         <input type="text" class="form-control" id="email" name="email" placeholder="E-mail" required>
@@ -31,7 +39,7 @@
                         <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha" required>
                     </div>
                     <!-- botão de login -->
-                    <button type="button" id="enviar" name="enviar" class="btn btn-success pull-right">Login</button>
+                    <button type="submit" id="enviar" name="enviar" class="btn btn-success pull-right">Login</button>
                 </form>
 
             </div>

@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, session, redirect
 from werkzeug.utils import secure_filename as secure
+from argon2 import PasswordHasher
+from datetime import timedelta
 import psycopg2
 import pickle
 import os
@@ -17,6 +19,7 @@ db = Database()
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 app_root = os.path.dirname(os.path.abspath(__file__))
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
 
 
 # funções gerais
@@ -44,6 +47,12 @@ def get_usuarios():
     query = 'SELECT * FROM usuarios ORDER BY nome;'
     db.cur.execute(query)
     return db.cur.fetchall()
+
+
+def usuario_pelo_email(email):
+    q = "SELECT * FROM usuarios WHERE email='{}';".format(email)
+    db.cur.execute(q)
+    return db.cur.fetchall()[0]
 
 
 def get_posts(active_only=True):
@@ -135,9 +144,26 @@ def adm_usuarios():
     return redirect('/admin/login/')
 
 
-@app.route('/admin/login/')
+@app.route('/admin/login/', methods=['POST', 'GET'])
 def adm_login():
-    return render_template('admin/login.html')
+    if(request.method == 'POST'):
+        session.pop('user', None)
+
+        try:
+            user = usuario_pelo_email(request.form['email'])
+        except Exception:
+            return render_template('/admin/login.html', msg=1)
+
+        ph = PasswordHasher()
+        try:
+            ph.verify(user[11], request.form['senha'])
+            session.permanent = True
+            session['user'] = user[10]
+            return redirect('/admin/')
+        except Exception:
+            return render_template('/admin/login.html', msg=1)
+    else:
+        return render_template('/admin/login.html')
 
 
 if __name__ == '__main__':
