@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, redirect
 from werkzeug.utils import secure_filename as secure
 import psycopg2
 import pickle
@@ -15,6 +15,7 @@ class Database:
 
 db = Database()
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 app_root = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -83,12 +84,18 @@ def contato():
 
 @app.route('/admin/')
 def adm_index():
-    posts = get_posts(False)
-    return render_template('admin/index.html', posts=posts)
+    if('user' in session):
+        posts = get_posts(False)
+        return render_template('admin/index.html', posts=posts)
+
+    return redirect('/admin/login/')
 
 
 @app.route('/admin/novo-post/', methods=['POST', 'GET'])
 def adm_novo_post():
+    if('user' not in session):
+        return redirect('/admin/login/')
+
     if(request.method == 'POST'):
         from datetime import datetime
         alvo = os.path.join(app_root, 'static/img/posts/')
@@ -122,7 +129,10 @@ def adm_novo_post():
 
 @app.route('/admin/usuarios/')
 def adm_usuarios():
-    return str(get_usuarios())
+    if('user' in session):
+        return str(get_usuarios())
+
+    return redirect('/admin/login/')
 
 
 @app.route('/admin/login/')
