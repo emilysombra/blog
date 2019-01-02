@@ -1,12 +1,83 @@
 from flask import (Flask, render_template, request,
                    session, redirect, url_for, g)
+from flask.sessions import SessionInterface, SessionMixin
+
+from redis import Redis
+
 from werkzeug.utils import secure_filename as secure
+from werkzeug.datastructures import CallbackDict
+
 from argon2 import PasswordHasher
-from datetime import timedelta
-import psycopg2
-import pickle
+
+from datetime import timedelta, datetime
+
+from uuid import uuid4
 import os
-import redis_session as r_session
+
+import psycopg2
+
+import pickle
+
+
+class RedisSession(CallbackDict, SessionMixin):
+
+    def __init__(self, initial=None, sid=None, new=False):
+        def on_update(self):
+            self.modified = True
+        CallbackDict.__init__(self, initial, on_update)
+        self.sid = sid
+        self.new = new
+        self.modified = False
+
+
+class RedisSessionInterface(SessionInterface):
+    serializer = pickle
+    session_class = RedisSession
+
+    def __init__(self, redis=None, prefix='session:'):
+        if redis is None:
+            redis = Redis()
+        self.redis = redis
+        self.prefix = prefix
+
+    def generate_sid(self):
+        return str(uuid4())
+
+    def get_redis_expiration_time(self, app, session):
+        if session.permanent:
+            return app.permanent_session_lifetime
+        return timedelta(days=1)
+
+    def open_session(self, app, request):
+        sid = request.cookies.get(app.session_cookie_name)
+        if not sid:
+            sid = self.generate_sid()
+            return self.session_class(sid=sid, new=True)
+        val = self.redis.get(self.prefix + sid)
+        if val is not None:
+            data = self.serializer.loads(val)
+            return self.session_class(data, sid=sid)
+        return self.session_class(sid=sid, new=True)
+
+    def save_session(self, app, session, response):
+        domain = self.get_cookie_domain(app)
+        if not session:
+            self.redis.delete(self.prefix + session.sid)
+            if session.modified:
+                response.delete_cookie(app.session_cookie_name,
+                                       domain=domain)
+            return
+        redis_exp = self.get_redis_expiration_time(app, session)
+        cookie_exp = self.get_expiration_time(app, session)
+        val = self.serializer.dumps(dict(session))
+        # self.redis.setex(self.prefix + session.sid, val,
+        #                 int(redis_exp.total_seconds()))
+        self.redis.setex(self.prefix + session.sid,
+                         int(redis_exp.total_seconds()),
+                         val)
+        response.set_cookie(app.session_cookie_name, session.sid,
+                            expires=cookie_exp, httponly=True,
+                            domain=domain)
 
 
 class Database:
@@ -17,9 +88,10 @@ class Database:
         self.cur = self.conn.cursor()
 
 
+redis_url = pickle.load(open('redis_url.pkl', 'rb'))
 db = Database()
 app = Flask(__name__)
-app.session_interface = r_session.RedisSessionInterface()
+app.session_interface = RedisSessionInterface()
 app.secret_key = os.urandom(24)
 app_root = os.path.dirname(os.path.abspath(__file__))
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
@@ -109,7 +181,6 @@ def adm_novo_post():
         return redirect(url_for('adm_login'))
 
     if(request.method == 'POST'):
-        from datetime import datetime
         alvo = os.path.join(app_root, 'static/img/posts/')
 
         titulo = request.form['titulo']
