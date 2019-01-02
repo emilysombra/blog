@@ -2,7 +2,7 @@ from flask import (Flask, render_template, request,
                    session, redirect, url_for, g)
 from flask.sessions import SessionInterface, SessionMixin
 
-from redis import Redis
+from redis import from_url
 
 from werkzeug.utils import secure_filename as secure
 from werkzeug.datastructures import CallbackDict
@@ -36,7 +36,8 @@ class RedisSessionInterface(SessionInterface):
 
     def __init__(self, redis=None, prefix='session:'):
         if redis is None:
-            redis = Redis()
+            redis_url = pickle.load(open('redis_url.pkl', 'rb'))
+            redis = from_url(redis_url)
         self.redis = redis
         self.prefix = prefix
 
@@ -88,7 +89,6 @@ class Database:
         self.cur = self.conn.cursor()
 
 
-redis_url = pickle.load(open('redis_url.pkl', 'rb'))
 db = Database()
 app = Flask(__name__)
 app.session_interface = RedisSessionInterface()
