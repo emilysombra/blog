@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, session, redirect
+from flask import (Flask, render_template, request,
+                   session, redirect, url_for, g)
 from werkzeug.utils import secure_filename as secure
 from argon2 import PasswordHasher
 from datetime import timedelta
@@ -93,17 +94,17 @@ def contato():
 
 @app.route('/admin/')
 def adm_index():
-    if('user' in session):
+    if(g.user):
         posts = get_posts(False)
         return render_template('admin/index.html', posts=posts)
 
-    return redirect('/admin/login/')
+    return redirect(url_for('adm_login'))
 
 
 @app.route('/admin/novo-post/', methods=['POST', 'GET'])
 def adm_novo_post():
-    if('user' not in session):
-        return redirect('/admin/login/')
+    if(not g.user):
+        return redirect(url_for('adm_login'))
 
     if(request.method == 'POST'):
         from datetime import datetime
@@ -138,16 +139,17 @@ def adm_novo_post():
 
 @app.route('/admin/usuarios/')
 def adm_usuarios():
-    if('user' in session):
+    if(g.user):
         return str(get_usuarios())
 
-    return redirect('/admin/login/')
+    return redirect(url_for('adm_login'))
 
 
 @app.route('/admin/login/', methods=['POST', 'GET'])
 def adm_login():
-    if('user' in session):
-        return redirect('/admin/')
+    if(g.user):
+        return redirect(url_for('adm_index'))
+
     if(request.method == 'POST'):
         session.pop('user', None)
 
@@ -166,6 +168,13 @@ def adm_login():
             return render_template('/admin/login.html', msg=1)
     else:
         return render_template('/admin/login.html')
+
+
+@app.before_request
+def before_request():
+    g.user = None
+    if('user' in session):
+        g.user = session['user']
 
 
 if __name__ == '__main__':
