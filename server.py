@@ -6,6 +6,7 @@ from datetime import timedelta
 import psycopg2
 import pickle
 import os
+import redis_session as r_session
 
 
 class Database:
@@ -18,6 +19,7 @@ class Database:
 
 db = Database()
 app = Flask(__name__)
+app.session_interface = r_session.RedisSessionInterface()
 app.secret_key = os.urandom(24)
 app_root = os.path.dirname(os.path.abspath(__file__))
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
