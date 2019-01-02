@@ -1,5 +1,5 @@
-from flask import (Flask, render_template, request,
-                   session, redirect, url_for, g)
+from flask import (Flask, render_template, request, session, redirect,
+                   url_for, g)
 from flask.sessions import SessionInterface, SessionMixin
 
 from redis import from_url
@@ -10,6 +10,9 @@ from werkzeug.datastructures import CallbackDict
 from argon2 import PasswordHasher
 
 from datetime import timedelta, datetime
+
+from functions import (formato_permitido, get_usuarios, inserir_post,
+                       usuario_pelo_email, get_posts)
 
 from uuid import uuid4
 import os
@@ -71,8 +74,6 @@ class RedisSessionInterface(SessionInterface):
         redis_exp = self.get_redis_expiration_time(app, session)
         cookie_exp = self.get_expiration_time(app, session)
         val = self.serializer.dumps(dict(session))
-        # self.redis.setex(self.prefix + session.sid, val,
-        #                 int(redis_exp.total_seconds()))
         self.redis.setex(self.prefix + session.sid,
                          int(redis_exp.total_seconds()),
                          val)
@@ -97,64 +98,18 @@ app_root = os.path.dirname(os.path.abspath(__file__))
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
 
 
-# funções gerais
-
-
-def formato_permitido(nome):
-    EXTENSOES = set(['png', 'jpg', 'jpeg'])
-    return '.' in nome and nome.rsplit('.', 1)[1].lower() in EXTENSOES
-
-
-def inserir_post(titulo, autor, data, img, texto, ativo):
-    q = "SELECT id from usuarios WHERE nome='{}' AND sobrenome='{}';"
-    q = q.format(autor.split()[0], autor.split()[1])
-    db.cur.execute(q)
-    autor = db.cur.fetchall()[0][0]
-
-    q = "INSERT INTO posts (titulo, autor, data, imagem, texto, ativo) " \
-        "VALUES ('{}', {}, '{}', '{}', '{}', {});"
-    q = q.format(titulo, autor, data, img, texto, ativo)
-    db.cur.execute(q)
-    db.conn.commit()
-
-
-def get_usuarios():
-    query = 'SELECT * FROM usuarios ORDER BY nome;'
-    db.cur.execute(query)
-    return db.cur.fetchall()
-
-
-def usuario_pelo_email(email):
-    q = "SELECT * FROM usuarios WHERE email='{}';".format(email)
-    db.cur.execute(q)
-    return db.cur.fetchall()[0]
-
-
-def get_posts(active_only=True):
-    q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
-        "CONCAT(nome, ' ', sobrenome), texto, ativo FROM posts as p " \
-        "INNER JOIN usuarios as u ON p.autor=u.id {}" \
-        "ORDER BY p.id desc;"
-    if(active_only):
-        q = q.format('WHERE ativo=1 ')
-    else:
-        q = q.format('')
-    db.cur.execute(q)
-    return db.cur.fetchall()
-
-
 # paginas user
 
 
 @app.route('/')
 def index():
-    posts = get_posts()
+    posts = get_posts(db)
     return render_template('index.html', posts=posts)
 
 
 @app.route('/sobre/')
 def sobre():
-    usuarios = get_usuarios()
+    usuarios = get_usuarios(db)
     return render_template('sobre.html', usuarios=usuarios)
 
 
@@ -169,7 +124,7 @@ def contato():
 @app.route('/admin/')
 def adm_index():
     if(g.user):
-        posts = get_posts(False)
+        posts = get_posts(db, False)
         return render_template('admin/index.html', posts=posts)
 
     return redirect(url_for('adm_login'))
@@ -204,17 +159,25 @@ def adm_novo_post():
 
         ativo = len(request.form.getlist('ativo'))
 
-        inserir_post(titulo, autor, data, img, texto, ativo)
+        inserir_post(db, titulo, autor, data, img, texto, ativo)
         return render_template('admin/novo-post.html', msg=1)
     else:
-        return render_template('admin/novo-post.html', msg=0)
+        autor = usuario_pelo_email(db, g.user)
+        nome = autor[1] + ' ' + autor[2]
+        return render_template('admin/novo-post.html', msg=0, autor=nome)
 
 
 @app.route('/admin/usuarios/')
 def adm_usuarios():
     if(g.user):
-        return str(get_usuarios())
+        return str(get_usuarios(db))
 
+    return redirect(url_for('adm_login'))
+
+
+@app.route('/admin/logout/')
+def adm_logout():
+    session.pop('user', None)
     return redirect(url_for('adm_login'))
 
 
@@ -227,9 +190,9 @@ def adm_login():
         session.pop('user', None)
 
         try:
-            user = usuario_pelo_email(request.form['email'])
+            user = usuario_pelo_email(db, request.form['email'])
         except Exception:
-            return render_template('/admin/login.html', msg=1)
+            return render_template('/admin/login.html', msg=1, logged=0)
 
         ph = PasswordHasher()
         try:
@@ -238,7 +201,7 @@ def adm_login():
             session['user'] = user[10]
             return redirect('/admin/')
         except Exception:
-            return render_template('/admin/login.html', msg=1)
+            return render_template('/admin/login.html', msg=1, logged=0)
     else:
         return render_template('/admin/login.html')
 
