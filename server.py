@@ -103,8 +103,14 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
 
 @app.route('/')
 def index():
-    posts = get_posts(db)
+    posts = get_posts(db, ultimos=10)
     return render_template('index.html', posts=posts)
+
+
+@app.route('/posts/')
+def posts():
+    posts = get_posts(db)
+    return render_template('posts.html', posts=posts)
 
 
 @app.route('/sobre/')

@@ -1,0 +1,77 @@
+{% include "includes/head.html" %}
+
+    <title>The Science's on the Table - Página Inicial</title>
+</head>
+
+<body>
+{% include "includes/menu.html" %}
+
+{% include "includes/chamada.html" %}
+
+    <div class="jumbotron-fluid">
+        <div class="container">
+            <section class="my-5">
+                <h2 class="h1-responsive font-weight-bold text-center my-5">Posts</h2>
+                <!--
+                <div class="container" style="background: yellow;">
+                    <form method="post" class="form-row align-items-center" style="background: red;">
+                        <div class="form-row" style="background: gray;">
+                            <div class="form-group col-auto" style="background: blue;">
+                                <input type="text" class="form-control" id="pesquisa" name="pesquisa" placeholder="Buscar" required>
+                            </div>
+
+                            <div class="form-group col-auto" style="background: green;">
+                                <button type="submit" class="btn btn-success mb-2">Buscar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                -->
+                <div class="container" style="margin-bottom: 10px;">
+                    <form method="post">
+                        <div class="row no-gutters">
+                            <div class="col">
+                                <input class="form-control border-secondary border-right-0 rounded-0" type="search" placeholder="Buscar" required id="pesquisa" name="pesquisa">
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-outline-secondary border-left-0 rounded-0 rounded-right" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- lista de posts -->
+                <!-- post #1 -->
+                {% for post in posts %}
+                {% set foto = "/static/{}".format(post[3]) %}
+                <div class="row">
+                    <!-- div da imagem -->
+                    <div class="col-lg-5 col-xl-4">
+                        <div class="view overlay rounded z-depth-1-half mb-lg-0 mb-4">
+                            <img class="img-fluid" src="{{ foto }}" alt="{{ post[1] }}" title="{{ post[1] }}">
+                        </div>
+                    </div>
+                    <!-- fim div da imagem -->
+
+                    <!-- div do texto -->
+                    <div class="col-lg-7 col-xl-8">
+                        <h3 class="font-weight-bold mb-3">{{ post[1] }}</h3>
+                        <p class="dark-grey-text">{{ post[5]|safe }}</p>
+                        <p>Publicado por: <a class="font-weight-bold">{{ post[4] }}</a>, {{ post[2] }}</p>
+                        <a class="btn btn-success" style="color:white;" role="button">Ver Mais</a>
+                    </div>
+                    <!-- fim div do texto -->
+                </div>
+
+                <hr class="my-5">
+                {% endfor %}
+                
+                <!-- fim da lista de posts-->
+            </section>
+        </div>
+    </div>
+    <!-- (new) fim div de corpo do site -->
+
+{% include "includes/rodape.html" %}
