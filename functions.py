@@ -44,3 +44,9 @@ def inserir_post(db, titulo, autor, data, img, texto, ativo):
     q = q.format(titulo, autor, data, img, texto, ativo)
     db.cur.execute(q)
     db.conn.commit()
+
+
+def get_posts_por_page(posts, page=1, per_page=10):
+    init = per_page * (page - 1)
+    fim = init + per_page
+    return posts[init:fim]

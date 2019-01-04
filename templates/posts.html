@@ -1,6 +1,6 @@
 {% include "includes/head.html" %}
 
-    <title>The Science's on the Table - Página Inicial</title>
+    <title>The Science's on the Table - Posts</title>
 </head>
 
 <body>
@@ -12,21 +12,6 @@
         <div class="container">
             <section class="my-5">
                 <h2 class="h1-responsive font-weight-bold text-center my-5">Posts</h2>
-                <!--
-                <div class="container" style="background: yellow;">
-                    <form method="post" class="form-row align-items-center" style="background: red;">
-                        <div class="form-row" style="background: gray;">
-                            <div class="form-group col-auto" style="background: blue;">
-                                <input type="text" class="form-control" id="pesquisa" name="pesquisa" placeholder="Buscar" required>
-                            </div>
-
-                            <div class="form-group col-auto" style="background: green;">
-                                <button type="submit" class="btn btn-success mb-2">Buscar</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                -->
                 <div class="container" style="margin-bottom: 10px;">
                     <form method="post">
                         <div class="row no-gutters">
@@ -70,6 +55,45 @@
                 
                 <!-- fim da lista de posts-->
             </section>
+
+            <nav aria-label="Navegação de Páginas">
+                <ul class="pagination justify-content-center">
+                    {% if pagination.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="/posts/{{ pagination.page - 1}}" tabindex="-1"  style="color: #133d06;">Anterior</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link" tabindex="-1">Anterior</span>
+                    </li>
+                    {% endif %}
+
+                    <!-- paginação -->
+                    {% for page in pagination.iter_pages() %}
+                    {% if page %}
+                    {% if page != pagination.page %}
+                    <li class="page-item"><a class="page-link" href="/posts/{{ page }}"  style="color: #133d06;">{{ page }}</a></li>
+                    {% else %}
+                    <li class="page-item active"><a class="page-link" href="/posts/{{ page }}"  style="color: white; background:#133d06;">{{ page }} <span class="sr-only">(current)</a></li>
+                    {% endif %}
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link"  style="color: #133d06;">...</span>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if pagination.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="/posts/{{ pagination.page + 1}}"  style="color: #133d06;">Próximo</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Próximo</span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
         </div>
     </div>
     <!-- (new) fim div de corpo do site -->
