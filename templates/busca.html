@@ -1,6 +1,6 @@
 {% include "includes/head.html" %}
 
-    <title>The Science's on the Table - Posts</title>
+    <title>The Science's on the Table - Busca</title>
 </head>
 
 <body>
@@ -16,7 +16,7 @@
                     <form method="get" action="/busca">
                         <div class="row no-gutters">
                             <div class="col">
-                                <input class="form-control border-secondary border-right-0 rounded-0" type="search" placeholder="Buscar" required id="pesquisa" name="q">
+                                <input class="form-control border-secondary border-right-0 rounded-0" type="search" placeholder="Buscar" required id="pesquisa" name="q" value="{{ q }}">
                             </div>
                             <div class="col-auto">
                                 <button class="btn btn-outline-secondary border-left-0 rounded-0 rounded-right" type="submit">
@@ -55,45 +55,6 @@
                 
                 <!-- fim da lista de posts-->
             </section>
-
-            <nav aria-label="Navegação de Páginas">
-                <ul class="pagination justify-content-center">
-                    {% if pagination.has_prev %}
-                    <li class="page-item">
-                        <a class="page-link" href="/posts/{{ pagination.page - 1}}" tabindex="-1"  style="color: #133d06;">Anterior</a>
-                    </li>
-                    {% else %}
-                    <li class="page-item disabled">
-                        <span class="page-link" tabindex="-1">Anterior</span>
-                    </li>
-                    {% endif %}
-
-                    <!-- paginação -->
-                    {% for page in pagination.iter_pages() %}
-                    {% if page %}
-                    {% if page != pagination.page %}
-                    <li class="page-item"><a class="page-link" href="/posts/{{ page }}"  style="color: #133d06;">{{ page }}</a></li>
-                    {% else %}
-                    <li class="page-item active"><a class="page-link" href="/posts/{{ page }}"  style="color: white; background:#133d06;">{{ page }} <span class="sr-only">(current)</a></li>
-                    {% endif %}
-                    {% else %}
-                    <li class="page-item disabled">
-                        <span class="page-link"  style="color: #133d06;">...</span>
-                    </li>
-                    {% endif %}
-                    {% endfor %}
-
-                    {% if pagination.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="/posts/{{ pagination.page + 1}}"  style="color: #133d06;">Próximo</a>
-                    </li>
-                    {% else %}
-                    <li class="page-item disabled">
-                        <span class="page-link">Próximo</span>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
         </div>
     </div>
     <!-- (new) fim div de corpo do site -->

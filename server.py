@@ -8,7 +8,8 @@ from argon2 import PasswordHasher
 from datetime import timedelta, datetime
 
 from functions import (formato_permitido, get_usuarios, inserir_post,
-                       usuario_pelo_email, get_posts, get_posts_por_page)
+                       usuario_pelo_email, get_posts, get_posts_por_page,
+                       buscar_posts)
 from classes import (Database, Pagination, RedisSessionInterface)
 
 import os
@@ -30,6 +31,15 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
 def index():
     posts = get_posts(db, ultimos=10)
     return render_template('index.html', posts=posts)
+
+
+@app.route('/busca')
+def busca():
+    if('q' not in request.args):
+        return redirect(url_for('posts'))
+
+    posts = buscar_posts(db, request.args['q'])
+    return render_template('busca.html', q=request.args['q'], posts=posts)
 
 
 @app.route('/posts/', defaults={'pag': 1})
