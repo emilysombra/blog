@@ -9,7 +9,7 @@ from datetime import timedelta, datetime
 
 from functions import (formato_permitido, get_usuarios, inserir_post,
                        usuario_pelo_email, get_posts, get_posts_por_page,
-                       buscar_posts, post_por_url)
+                       buscar_posts, post_por_url, usuario_pelo_nome)
 from classes import (Database, Pagination, RedisSessionInterface)
 
 import os
@@ -71,7 +71,8 @@ def ver_post(url_post):
     post = post_por_url(db, url_post.lower())
 
     if(len(post) > 0):
-        return render_template('ver-post.html', post=post[0])
+        autor = usuario_pelo_nome(db, post[0][4].split()[0])
+        return render_template('ver-post.html', post=post[0], autor=autor)
     else:
         return redirect(url_for('posts'))
 

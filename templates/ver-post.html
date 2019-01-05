@@ -9,6 +9,7 @@
 {% include "includes/chamada.html" %}
 
 {% set foto = "/static/{}".format(post[3]) %}
+{% set img = "/static/{}".format(autor[6]) %}
 
     <div class="jumbotron-fluid">
         <div class="container">
@@ -20,19 +21,83 @@
                     </p>
                     <p><i class="fa fa-calendar"></i> Publicado em {{ post[2]}}</p>
                     <img class="img-fluid" src="{{ foto }}" alt="{{ post[1] }}" title="{{ post[1] }}">
+
                     <hr>
+                    
                     <p class="dark-grey-text">{{ post[5]|safe }}</p>
+                    
+                    <hr>
+                    <div class="container portfolio" style="margin-bottom: 10px;">
+                        <div class="bio-info">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="bio-image" style="text-align:center;">
+                                                <img width="200px" src="{{ img }}" class="img-fluid rounded-circle z-depth-1" alt="{{ post[4] }}" title="{{ post[4] }}">
+                                            </div>          
+                                        </div>
+                                    </div>  
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="bio-content">
+                                        <h4>{{ post[4] }}</h4>
+                                        <h6>{{ autor[5] }}</h6>
+                                        <p>{{ autor[4] }}</p>
+                                        <!-- redes sociais -->
+                                        <a class="fa-lg fb-ic" href="{{ autor[0] }}" target="_blank" style="color: #133d06;">
+                                            <i class="fab fa-facebook"></i>
+                                        </a>
+                                        <a class="fa-lg ins-ic" href="{{ autor[1] }}" target="_blank" style="color: #133d06;">
+                                            <i class="fab fa-instagram"></i>
+                                        </a>
+                                        <a class="fa-lg git-ic" href="{{ autor[2] }}" target="_blank" style="color: #133d06;">
+                                            <i class="fab fa-github"></i>
+                                        </a>
+                                        <a class="fa-lg li-ic" href="{{ autor[3] }}" target="_blank" style="color: #133d06;">
+                                            <i class="fab fa-linkedin-in"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-lg-4">
-                    [BETA TESTE]<br>
-                    Em breve:<br>
-                    - Busca<br>
-                    - Redes Sociais do Autor<br>
-                    - Bio do Autor<br>
-                    - posts populares<br>
-                    - anuncios / recomendações<br>
-                    - comentarios (facebook)
+                    <div class="well">
+                        <form method="get" action="/busca">
+                            <h4><i class="fa fa-search"></i> Procurar</h4>
+                            <div class="input-group">
+                                <input type="search" name="q" placeholder="Procurar" class="form-control">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="submit">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+
+                    <hr>
+
+                    {% if g.user %}
+                    <div class="well">
+                        <a class="btn btn-info" style="color:white;" role="button">Editar</a>
+                        <a class="btn btn-danger" style="color:white;" role="button">Excluir</a>
+                    </div>
+
+                    <hr>
+
+                    {% endif %}
+
+                    <div class="well">
+                        [BETA TESTE]<br>
+                        Em breve:<br>
+                        - posts populares<br>
+                        - anuncios / recomendações<br>
+                        - comentarios (facebook)
+                    </div>
                 </div>
             </div>
         </div>
