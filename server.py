@@ -105,6 +105,9 @@ def adm_novo_post():
     if(not g.user):
         return redirect(url_for('adm_login'))
 
+    autor = usuario_pelo_email(db, g.user)
+    nome = autor[1] + ' ' + autor[2]
+
     if(request.method == 'POST'):
         alvo = os.path.join(app_root, 'static/img/posts/')
 
@@ -130,10 +133,8 @@ def adm_novo_post():
         ativo = len(request.form.getlist('ativo'))
 
         inserir_post(db, titulo, autor, data, img, texto, ativo)
-        return render_template('admin/novo-post.html', msg=1)
+        return render_template('admin/novo-post.html', msg=1, autor=nome)
     else:
-        autor = usuario_pelo_email(db, g.user)
-        nome = autor[1] + ' ' + autor[2]
         return render_template('admin/novo-post.html', msg=0, autor=nome)
 
 

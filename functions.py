@@ -41,14 +41,16 @@ def get_posts(db, active_only=True, ultimos=0):
 
 
 def inserir_post(db, titulo, autor, data, img, texto, ativo):
+    url = gerar_url(db, titulo, autor)
+
     q = "SELECT id from usuarios WHERE nome='{}' AND sobrenome='{}';"
     q = q.format(autor.split()[0], autor.split()[1])
     db.cur.execute(q)
     autor = db.cur.fetchall()[0][0]
 
-    q = "INSERT INTO posts (titulo, autor, data, imagem, texto, ativo) " \
-        "VALUES ('{}', {}, '{}', '{}', '{}', {});"
-    q = q.format(titulo, autor, data, img, texto, ativo)
+    q = "INSERT INTO posts (titulo, autor, data, imagem, texto, ativo, url) " \
+        "VALUES ('{}', {}, '{}', '{}', '{}', {}, '{}');"
+    q = q.format(titulo, autor, data, img, texto, ativo, url)
     db.cur.execute(q)
     db.conn.commit()
 
@@ -82,3 +84,22 @@ def post_por_url(db, url):
     q = q.format(url)
     db.cur.execute(q)
     return db.cur.fetchall()
+
+
+def gerar_url(db, titulo, autor):
+    url = titulo.lower().replace(' ', '-')[:45]
+
+    posts = post_por_url(db, url)
+    if(len(posts) == 0):
+        return url
+    else:
+        url = url[:30] + '-' + autor.lower().replace(' ', '-')
+        posts = post_por_url(db, url)
+
+    i = 1
+    while(len(posts) > 0):
+        url = url[:-1] + str(i)
+        i += 1
+        posts = post_por_url(db, url)
+
+    return url
