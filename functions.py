@@ -17,7 +17,7 @@ def usuario_pelo_email(db, email):
 
 def get_posts(db, active_only=True, ultimos=0):
     q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
-        "CONCAT(nome, ' ', sobrenome), texto, ativo FROM posts as p " \
+        "CONCAT(nome, ' ', sobrenome), texto, ativo, url FROM posts as p " \
         "INNER JOIN usuarios as u ON p.autor=u.id {}" \
         "ORDER BY p.id desc"
     if(active_only):
@@ -55,7 +55,7 @@ def get_posts_por_page(posts, page=1, per_page=10):
 def buscar_posts(db, src, active_only=True):
     src = '%' + src.lower() + '%'
     q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
-        "CONCAT(nome, ' ', sobrenome), texto, ativo FROM posts AS p " \
+        "CONCAT(nome, ' ', sobrenome), texto, ativo, url FROM posts AS p " \
         "INNER JOIN usuarios AS u ON p.autor=u.id WHERE (LOWER(texto) " \
         "LIKE '{}' OR LOWER(titulo) LIKE '{}'){} ORDER BY p.id desc;"
     if(active_only):
@@ -63,5 +63,15 @@ def buscar_posts(db, src, active_only=True):
     else:
         q = q.format(src, src, '')
 
+    db.cur.execute(q)
+    return db.cur.fetchall()
+
+
+def post_por_url(db, url):
+    q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
+        "CONCAT(nome, ' ', sobrenome), texto, ativo, url FROM posts AS p " \
+        "INNER JOIN usuarios AS u ON p.autor=u.id WHERE url='{}';"
+
+    q = q.format(url)
     db.cur.execute(q)
     return db.cur.fetchall()

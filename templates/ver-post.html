@@ -1,0 +1,42 @@
+{% include "includes/head.html" %}
+
+    <title>The Science's on the Table - {{ post[1] }}</title>
+</head>
+
+<body>
+{% include "includes/menu.html" %}
+
+{% include "includes/chamada.html" %}
+
+{% set foto = "/static/{}".format(post[3]) %}
+
+    <div class="jumbotron-fluid">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h1>{{ post[1] }}</h1>
+                    <p class="lead">
+                        <i class="fa fa-user"></i> {{ post[4] }}
+                    </p>
+                    <p><i class="fa fa-calendar"></i> Publicado em {{ post[2]}}</p>
+                    <img class="img-fluid" src="{{ foto }}" alt="{{ post[1] }}" title="{{ post[1] }}">
+                    <hr>
+                    <p class="dark-grey-text">{{ post[5]|safe }}</p>
+                </div>
+
+                <div class="col-lg-4">
+                    [BETA TESTE]<br>
+                    Em breve:<br>
+                    - Busca<br>
+                    - Redes Sociais do Autor<br>
+                    - Bio do Autor<br>
+                    - posts populares<br>
+                    - anuncios / recomendações<br>
+                    - comentarios (facebook)
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- (new) fim div de corpo do site -->
+
+{% include "includes/rodape.html" %}

@@ -9,7 +9,7 @@ from datetime import timedelta, datetime
 
 from functions import (formato_permitido, get_usuarios, inserir_post,
                        usuario_pelo_email, get_posts, get_posts_por_page,
-                       buscar_posts)
+                       buscar_posts, post_por_url)
 from classes import (Database, Pagination, RedisSessionInterface)
 
 import os
@@ -60,6 +60,20 @@ def posts(pag):
         return redirect('/posts/1')
 
     return render_template('posts.html', posts=listposts, pagination=p)
+
+
+@app.route('/posts/ver-post/', defaults={'url_post': None})
+@app.route('/posts/ver-post/<url_post>/', methods=['GET'])
+def ver_post(url_post):
+    if(not url_post):
+        return redirect(url_for('posts'))
+
+    post = post_por_url(db, url_post.lower())
+
+    if(len(post) > 0):
+        return render_template('ver-post.html', post=post[0])
+    else:
+        return redirect(url_for('posts'))
 
 
 @app.route('/sobre/')

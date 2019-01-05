@@ -1,5 +1,5 @@
 {% include "admin/includes/head.html" %}
-    <title>The Science's on the Table - Painel de Administrador</title>
+    <title> The Science's on the Table - Painel de Administrador</title>
 </head>
 
 <!-- corpo do site -- >
@@ -21,6 +21,14 @@
             <section class="my-5">
                 <h2 class="h1-responsive font-weight-bold text-center my-5">Últimos Posts</h2>
 
+                {% if posts == [] %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    Nenhum post encontrado
+                </div>
+                {% endif %}
                 <!-- lista de posts -->
                 <!-- post #1 -->
                 {% for post in posts %}

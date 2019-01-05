@@ -13,32 +13,16 @@
             <section class="my-5">
                 <h2 class="h1-responsive font-weight-bold text-center my-5">Últimos Posts</h2>
 
-                <!-- lista de posts -->
-                <!-- post #1 -->
-                {% for post in posts %}
-                {% set foto = "/static/{}".format(post[3]) %}
-                <div class="row">
-                    <!-- div da imagem -->
-                    <div class="col-lg-5 col-xl-4">
-                        <div class="view overlay rounded z-depth-1-half mb-lg-0 mb-4">
-                            <img class="img-fluid" src="{{ foto }}" alt="{{ post[1] }}" title="{{ post[1] }}">
-                        </div>
-                    </div>
-                    <!-- fim div da imagem -->
-
-                    <!-- div do texto -->
-                    <div class="col-lg-7 col-xl-8">
-                        <h3 class="font-weight-bold mb-3">{{ post[1] }}</h3>
-                        <p class="dark-grey-text">{{ post[5]|safe }}</p>
-                        <p>Publicado por: <a class="font-weight-bold">{{ post[4] }}</a>, {{ post[2] }}</p>
-                        <a class="btn btn-success" style="color:white;" role="button">Ver Mais</a>
-                    </div>
-                    <!-- fim div do texto -->
+                {% if posts == [] %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    Desculpe, ainda não temos nenhum post
                 </div>
-
-                <hr class="my-5">
-                {% endfor %}
-                
+                {% endif %}
+                <!-- lista de posts -->
+                {% include "includes/mostrar-posts.html" %}
                 <!-- fim da lista de posts-->
             </section>
         </div>
