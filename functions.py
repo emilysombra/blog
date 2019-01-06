@@ -55,6 +55,19 @@ def inserir_post(db, titulo, autor, data, img, texto, ativo):
     db.conn.commit()
 
 
+def editar_post(db, post, titulo, autor, texto, ativo):
+    q = "SELECT id from usuarios WHERE nome='{}' AND sobrenome='{}';"
+    q = q.format(autor.split()[0], autor.split()[1])
+    db.cur.execute(q)
+    autor = db.cur.fetchall()[0][0]
+
+    q = "UPDATE posts SET titulo='{}', autor={}, texto='{}', ativo={} " \
+        "WHERE id={};".format(titulo, autor, texto, ativo, post[0][0])
+
+    db.cur.execute(q)
+    db.conn.commit()
+
+
 def get_posts_por_page(posts, page=1, per_page=10):
     init = per_page * (page - 1)
     fim = init + per_page

@@ -9,7 +9,8 @@ from datetime import timedelta, datetime
 
 from functions import (formato_permitido, get_usuarios, inserir_post,
                        usuario_pelo_email, get_posts, get_posts_por_page,
-                       buscar_posts, post_por_url, usuario_pelo_nome)
+                       buscar_posts, post_por_url, usuario_pelo_nome,
+                       editar_post)
 from classes import (Database, Pagination, RedisSessionInterface)
 
 import os
@@ -139,18 +140,32 @@ def adm_novo_post():
 
 
 @app.route('/posts/editar-post/', defaults={'url_post': None})
-@app.route('/posts/editar-post/<url_post>/', methods=['GET'])
+@app.route('/posts/editar-post/<url_post>/', methods=['POST', 'GET'])
 def adm_editar_post(url_post):
     if((not g.user) or (not url_post)):
         return redirect(url_for('posts'))
 
     post = post_por_url(db, url_post.lower())
+    if(request.method == 'POST'):
+        if(len(post) == 0):
+            return redirect(url_for('posts'))
+        titulo = request.form['titulo']
+        autor = request.form['autor']
+        texto = request.form['texto']
+        ativo = len(request.form.getlist('ativo'))
 
-    if(len(post) > 0):
+        editar_post(db, post, titulo, autor, texto, ativo)
+
+        post = post_por_url(db, url_post.lower())
         return render_template('admin/editar-post.html', post=post[0],
-                               autor=post[0][4])
+                               autor=post[0][4], msg=1)
+
     else:
-        return redirect(url_for('posts'))
+        if(len(post) > 0):
+            return render_template('admin/editar-post.html', post=post[0],
+                                   autor=post[0][4])
+        else:
+            return redirect(url_for('posts'))
 
 
 @app.route('/admin/usuarios/')
