@@ -24,6 +24,19 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/contato/">Contato</a>
                 </li>
+
+                {% if g.user %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/novo-post/">Novo Post</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/usuarios/">Usuários</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/logout/">Sair</a>
+                {% endif %}
             </ul>
 
             <!-- form de busca -->

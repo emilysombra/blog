@@ -17,7 +17,7 @@ def usuario_pelo_email(db, email):
 
 def usuario_pelo_nome(db, nome):
     q = "SELECT facebook, instagram, github, linkedin, descricao, pesquisa, " \
-        "dir_foto FROM usuarios WHERE nome='{}';".format(nome)
+        "dir_foto, email FROM usuarios WHERE nome='{}';".format(nome)
     db.cur.execute(q)
     return db.cur.fetchall()[0]
 

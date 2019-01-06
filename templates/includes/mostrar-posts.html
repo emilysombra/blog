@@ -15,10 +15,7 @@
                         <p class="dark-grey-text">{{ post[5]|safe }}</p>
                         <p>Publicado por: <a class="font-weight-bold">{{ post[4] }}</a>, {{ post[2] }}</p>
                         <a class="btn btn-success" href="/posts/ver-post/{{ post[7] }}" style="color:white;" role="button">Ver Mais</a>
-                        {% if g.user %}
-                        <a class="btn btn-info" style="color:white;" role="button">Editar</a>
-                        <a class="btn btn-danger" style="color:white;" role="button">Excluir</a>
-                        {% endif %}
+                        {% include "includes/botoes-admin-only.html" %}
                     </div>
                     <!-- fim div do texto -->
                 </div>

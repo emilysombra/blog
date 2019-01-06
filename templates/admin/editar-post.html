@@ -1,5 +1,5 @@
 {% include "includes/head.html" %}
-    <title>The Science's on the Table - Novo Post</title>
+    <title>The Science's on the Table - Editar Post - {{ post[1] }}</title>
     <!-- summernote css -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
 </head>
@@ -22,14 +22,14 @@
         <div class="container">
             <!-- form de post novo -->
             <div class="form-area">
-                <form role="form" method="post" enctype="multipart/form-data">
-                    <h2 class="h1-responsive font-weight-bold text-center my-5">Novo Post</h2>
+                <form role="form" method="post">
+                    <h2 class="h1-responsive font-weight-bold text-center my-5">Editar Post</h2>
                     {% if msg == 1 %}
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        Post cadastrado com sucesso!
+                        Post editado com sucesso!
                     </div>
                     {% elif msg == 2%}
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -42,26 +42,25 @@
                     <!-- campo título-->
                     <div class="form-group">
                         <label for="titulo">Título do Post:</label>
-                        <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Título" required>
+                        <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Título" value="{{ post[1] }}" required>
                     </div>
                     <!-- campo autor-->
                     <div class="form-group">
                         <label for="autor">Autor:</label>
                         <input type="text" class="form-control" id="autor" name="autor" placeholder="{{ autor }}" value="{{ autor }}" required readonly>
                     </div>
-                    <!-- campo imagem-->
-                    <div class="form-group">
-                        <label for="img">Imagem:</label>
-                        <input type="file" class="form-control-file" id="img" name="img" required>
-                    </div>
                     <!-- campo post -->
                     <div class="form-group">
-                        <textarea class="form-control" type="textarea" name="texto" id="texto" placeholder="Conteúdo do Post" rows="7"></textarea>
+                        <textarea class="form-control" type="textarea" name="texto" id="texto" placeholder="Conteúdo do Post" rows="7">{{ post[5] }}</textarea>
                         <span class="help-block">
                     </div>
                     <!-- campo ativo-->
                     <div class="form-check">
+                        {% if post[6] == 1 %}
+                        <input class="form-check-input" checked type="checkbox" name="ativo" id="defaultCheck1">
+                        {% else %}
                         <input class="form-check-input" type="checkbox" name="ativo" id="defaultCheck1">
+                        {% endif %}
                         <label class="form-check-label" for="defaultCheck1">Post Visível</label>
                     </div>
                     <!-- botão de envio -->

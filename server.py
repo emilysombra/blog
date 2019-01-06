@@ -138,6 +138,21 @@ def adm_novo_post():
         return render_template('admin/novo-post.html', msg=0, autor=nome)
 
 
+@app.route('/posts/editar-post/', defaults={'url_post': None})
+@app.route('/posts/editar-post/<url_post>/', methods=['GET'])
+def adm_editar_post(url_post):
+    if((not g.user) or (not url_post)):
+        return redirect(url_for('posts'))
+
+    post = post_por_url(db, url_post.lower())
+
+    if(len(post) > 0):
+        return render_template('admin/editar-post.html', post=post[0],
+                               autor=post[0][4])
+    else:
+        return redirect(url_for('posts'))
+
+
 @app.route('/admin/usuarios/')
 def adm_usuarios():
     if(g.user):
@@ -149,13 +164,13 @@ def adm_usuarios():
 @app.route('/admin/logout/')
 def adm_logout():
     session.pop('user', None)
-    return redirect(url_for('adm_login'))
+    return redirect(url_for('index'))
 
 
 @app.route('/admin/login/', methods=['POST', 'GET'])
 def adm_login():
     if(g.user):
-        return redirect(url_for('adm_index'))
+        return redirect(url_for('index'))
 
     if(request.method == 'POST'):
         session.pop('user', None)
@@ -170,7 +185,7 @@ def adm_login():
             ph.verify(user[11], request.form['senha'])
             session.permanent = True
             session['user'] = user[10]
-            return redirect('/admin/')
+            return redirect(url_for('index'))
         except Exception:
             return render_template('/admin/login.html', msg=1, logged=0)
     else:
