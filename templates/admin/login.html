@@ -12,7 +12,7 @@
         <label for="inputPassword" class="sr-only">Senha</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Senha" name="senha" required>
         <button class="btn btn-lg btn-success btn-block" type="submit">Entrar</button>
-        <p class="mt-5 mb-3 text-muted">© 2018 Copyright: The Science's on the Table</p>
+        <p class="mt-5 mb-3 text-muted"><span id="copyright">© 2018 Copyright: The Science's on the Table</span></p>
     </form>
 </body>
 
@@ -67,3 +67,6 @@ body {
   border-top-right-radius: 0;
 }
 </style>
+
+<!-- js do ano -->
+<script type="text/javascript" src="{{url_for('.static', filename='js/copyright.js')}}"></script>
