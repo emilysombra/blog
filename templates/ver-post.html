@@ -104,17 +104,13 @@
 
                     <div class="well">
                         <h4><i class="fas fa-ad"></i> Apoio:</h4>
-                        <a href="#" target="_blank">
-                            <img src="http://placehold.it/500x330" class="img-fluid" alt="" style="margin-bottom: 10px;">
+                        {% for ad in g.ads %}
+                        {% set foto = "/static/img/ads/{}".format(ad[2]) %}
+                        <a href="{{ ad[3] }}" target="_blank">
+                            <img src="{{ foto }}" class="img-fluid" alt="{{ ad[1] }}" title="{{ ad[1] }}" style="margin-bottom: 10px;">
                         </a>
 
-                        <a href="#" target="_blank">
-                            <img src="http://placehold.it/500x330" class="img-fluid" alt="" style="margin-bottom: 10px;">
-                        </a>
-
-                        <a href="#" target="_blank">
-                            <img src="http://placehold.it/500x330" class="img-fluid" alt="" style="margin-bottom: 10px;">
-                        </a>
+                        {% endfor %}
                     </div>
 
                     <hr>

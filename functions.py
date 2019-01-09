@@ -116,3 +116,8 @@ def gerar_url(db, titulo, autor):
         posts = post_por_url(db, url)
 
     return url
+
+
+def buscar_ads(db):
+    db.cur.execute("SELECT * FROM ads;")
+    return db.cur.fetchall()

@@ -10,7 +10,7 @@ from datetime import timedelta, datetime
 from functions import (formato_permitido, get_usuarios, inserir_post,
                        usuario_pelo_email, get_posts, get_posts_por_page,
                        buscar_posts, post_por_url, usuario_pelo_nome,
-                       editar_post)
+                       editar_post, buscar_ads)
 from classes import (Database, Pagination, RedisSessionInterface)
 
 import os
@@ -209,6 +209,7 @@ def adm_login():
 
 @app.before_request
 def before_request():
+    g.ads = buscar_ads(db)
     g.user = None
     if('user' in session):
         g.user = session['user']
