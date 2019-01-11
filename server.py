@@ -243,5 +243,11 @@ def before_request():
         g.user = session['user']
 
 
+# erros
+@app.errorhandler(404)
+def handle_not_found(e):
+    return render_template('error/404.html')
+
+
 if __name__ == '__main__':
     app.run()
