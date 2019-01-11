@@ -14,6 +14,14 @@
             <div class="form-area">
                 <form role="form" method="POST">
                     <h2 class="h1-responsive font-weight-bold text-center my-5">Contato</h2>
+                    {% if msg == 1 %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        Mensagem enviada!
+                    </div>
+                    {% endif %}
                     <!-- campo nome-->
                     <div class="form-group">
                         <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
@@ -24,7 +32,7 @@
                     </div>
                     <!-- campo mensagem -->
                     <div class="form-group">
-                        <textarea class="form-control" type="textarea" id="msg" placeholder="Mensagem" maxlength="500" rows="7"></textarea>
+                        <textarea class="form-control" name="msg" type="textarea" id="msg" placeholder="Mensagem" maxlength="500" rows="7"></textarea>
                         <span class="help-block">
                             <p id="charsrestantes" class="help-block">Você atingiu o limite</p>
                         </span>

@@ -14,7 +14,7 @@ from functions import (formato_permitido, get_usuarios, inserir_post,
 from classes import (Database, Pagination, RedisSessionInterface)
 
 import os
-
+import requests
 
 PER_PAGE = 10
 db = Database()
@@ -24,6 +24,8 @@ app.secret_key = os.urandom(24)
 app_root = os.path.dirname(os.path.abspath(__file__))
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
 
+MAILGUN_DOMAIN_NAME = 'mg.scienceonthetable.com'
+MAILGUN_API_KEY = '730148c380c061de86c725160525367a-49a2671e-82564bdb'
 
 # paginas user
 
@@ -84,9 +86,35 @@ def sobre():
     return render_template('sobre.html', usuarios=usuarios)
 
 
-@app.route('/contato/')
+@app.route('/contato/', methods=['GET', 'POST'])
 def contato():
-    return render_template('contato.html')
+    if(request.method == 'POST'):
+        nome = request.form['nome'] if request.form['nome'] else 'Anônimo'
+        email = request.form['email'] if request.form['email'] else 'Anônimo'
+        msg = request.form['msg']
+
+        corpo = "Mensagem enviada por {}.\n".format(nome)
+        corpo += "E-mail: {}\n\n".format(email)
+        corpo += "Mensagem:\n{}\n".format(msg)
+
+        assunto = "Contato - The Science's on the Table ({})".format(nome)
+
+        url = 'https://api.mailgun.net/v3/{}/messages'
+        url = url.format(MAILGUN_DOMAIN_NAME)
+        auth = ('api', MAILGUN_API_KEY)
+        dados = {
+            'from': 'Mailgun User <mailgun@{}>'.format(MAILGUN_DOMAIN_NAME),
+            'to': ['marcos.sombraaa@gmail.com'],
+            'subject': assunto,
+            'text': corpo
+        }
+
+        response = requests.post(url, auth=auth, data=dados)
+        response.raise_for_status()
+
+        return render_template('contato.html', msg=1)
+    else:
+        return render_template('contato.html')
 
 
 # paginas adm
