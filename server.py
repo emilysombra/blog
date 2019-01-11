@@ -24,7 +24,7 @@ app.secret_key = os.urandom(24)
 app_root = os.path.dirname(os.path.abspath(__file__))
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
 
-MAILGUN_DOMAIN_NAME = 'mg.scienceonthetable.com'
+MAILGUN_DOMAIN_NAME = 'sandbox2be60ddbc3154d4ba274495817a0b663.mailgun.org'
 MAILGUN_API_KEY = '730148c380c061de86c725160525367a-49a2671e-82564bdb'
 
 # paginas user
@@ -103,7 +103,7 @@ def contato():
         url = url.format(MAILGUN_DOMAIN_NAME)
         auth = ('api', MAILGUN_API_KEY)
         dados = {
-            'from': 'Mailgun User <mailgun@{}>'.format(MAILGUN_DOMAIN_NAME),
+            'from': 'Mailgun User <postmaster@{}>'.format(MAILGUN_DOMAIN_NAME),
             'to': ['marcos.sombraaa@gmail.com'],
             'subject': assunto,
             'text': corpo
