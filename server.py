@@ -199,7 +199,8 @@ def adm_editar_post(url_post):
 @app.route('/admin/usuarios/')
 def adm_usuarios():
     if(g.user):
-        return str(get_usuarios(db))
+        return render_template('admin/ver-usuarios.html',
+                               autores=get_usuarios(db))
 
     return redirect(url_for('adm_login'))
 
