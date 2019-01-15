@@ -124,7 +124,8 @@ def buscar_ads(db):
 
 
 def get_popular_posts(db):
-    q = "SELECT titulo, url, visitas FROM posts ORDER BY visitas DESC LIMIT 5;"
+    q = "SELECT titulo, url, visitas FROM posts WHERE ativo=1 "\
+        "ORDER BY visitas DESC LIMIT 5;"
     db.cur.execute(q)
     return db.cur.fetchall()
 

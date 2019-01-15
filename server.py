@@ -135,6 +135,27 @@ def adm_index():
     return redirect(url_for('adm_login'))
 
 
+@app.route('/posts/excluir-post/', defaults={'url_post': None})
+@app.route('/posts/excluir-post/<url_post>/', methods=['POST'])
+def adm_excluir_post(url_post):
+    if((not g.user) or (not url_post)):
+        return redirect(url_for('posts'))
+
+    if(request.method == 'POST'):
+        senha_user = usuario_pelo_email(db, g.user)[11]
+        ph = PasswordHasher()
+        try:
+            ph.verify(senha_user, request.form['senha'])
+            q = "DELETE FROM posts WHERE url='{}';".format(url_post)
+            db.cur.execute(q)
+            db.conn.commit()
+            return redirect(url_for('index'))
+        except Exception:
+            return redirect('/posts/ver-post/{}/'.format(url_post))
+    else:
+        return redirect(url_for('posts'))
+
+
 @app.route('/admin/novo-post/', methods=['POST', 'GET'])
 def adm_novo_post():
     if(not g.user):
