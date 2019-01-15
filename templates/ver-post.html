@@ -108,7 +108,7 @@
                             {% for post in populares %}
                             {% set url = "/posts/ver-post/{}".format(post[1]) %}
                             <li>
-                                <a href="{{ url }}" target="_blank"><span class="badge badge-success">{{ post[0]}}</span></a>
+                                <a href="{{ url }}" target="_blank" class="badge badge-success">{{ post[0]}}</a>
                             </li>
                             {% endfor %}
                         </ul>
