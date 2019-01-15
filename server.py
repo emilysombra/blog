@@ -10,11 +10,13 @@ from datetime import timedelta, datetime
 from functions import (formato_permitido, get_usuarios, inserir_post,
                        usuario_pelo_email, get_posts, get_posts_por_page,
                        buscar_posts, post_por_url, usuario_pelo_nome,
-                       editar_post, buscar_ads)
+                       editar_post, buscar_ads, get_popular_posts,
+                       incrementar_visita)
 from classes import (Database, Pagination, RedisSessionInterface)
 
 import os
 import requests
+import pickle
 
 PER_PAGE = 10
 db = Database()
@@ -24,8 +26,9 @@ app.secret_key = os.urandom(24)
 app_root = os.path.dirname(os.path.abspath(__file__))
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
 
-MAILGUN_DOMAIN_NAME = 'sandbox2be60ddbc3154d4ba274495817a0b663.mailgun.org'
-MAILGUN_API_KEY = '730148c380c061de86c725160525367a-49a2671e-82564bdb'
+credentials = pickle.load(open('mailgun.pkl', 'rb'))
+MAILGUN_DOMAIN_NAME = credentials['nome']
+MAILGUN_API_KEY = credentials['key']
 
 # paginas user
 
@@ -72,10 +75,13 @@ def ver_post(url_post):
         return redirect(url_for('posts'))
 
     post = post_por_url(db, url_post.lower())
+    populares = get_popular_posts(db)
+    incrementar_visita(db, url_post)
 
     if(len(post) > 0):
         autor = usuario_pelo_nome(db, post[0][4].split()[0])
-        return render_template('ver-post.html', post=post[0], autor=autor)
+        return render_template('ver-post.html', post=post[0], autor=autor,
+                               populares=populares)
     else:
         return redirect(url_for('posts'))
 
@@ -229,7 +235,7 @@ def adm_login():
             ph.verify(user[11], request.form['senha'])
             session.permanent = True
             session['user'] = user[10]
-            return redirect(url_for('index'))
+            return redirect(url_for('adm_index'))
         except Exception:
             return render_template('/admin/login.html', msg=1, logged=0)
     else:

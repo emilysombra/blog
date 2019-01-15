@@ -30,7 +30,7 @@ def get_posts(db, active_only=True, ultimos=0):
     if(active_only):
         q = q.format('WHERE ativo=1 ')
     else:
-        q = q.format('')
+        q = q.format('WHERE ativo=0 ')
 
     if(ultimos > 0):
         q += " LIMIT {};".format(ultimos)
@@ -121,3 +121,15 @@ def gerar_url(db, titulo, autor):
 def buscar_ads(db):
     db.cur.execute("SELECT * FROM ads;")
     return db.cur.fetchall()
+
+
+def get_popular_posts(db):
+    q = "SELECT titulo, url, visitas FROM posts ORDER BY visitas DESC LIMIT 5;"
+    db.cur.execute(q)
+    return db.cur.fetchall()
+
+
+def incrementar_visita(db, url):
+    q = "UPDATE posts SET visitas = visitas + 1 WHERE url='{}';".format(url)
+    db.cur.execute(q)
+    db.conn.commit()
