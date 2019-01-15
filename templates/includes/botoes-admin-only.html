@@ -1,4 +1,33 @@
                         {% if g.user %}
                         <a class="btn btn-info" href="/posts/editar-post/{{ post[7] }}/" style="color:white;" role="button">Editar</a>
-                        <a class="btn btn-danger" style="color:white;" role="button">Excluir</a>
+                        <button type="button" data-toggle="modal" id="modal-button" data-target="#password-modal" class="btn btn-danger" style="color:white;" role="button">Excluir</button>
+
+                        <div class="modal fade" id="password-modal" aria-labelledby="password-modal" aria-hidden="true" tabindex="-1" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Deseja mesmo excluir este post?</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    
+                                    <form method="post" action="/posts/excluir-post/{{ post[7] }}/">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="senha" class="col-form-label">Digite sua senha para confirmar:</label>
+                                                <input type="password" required class="form-control" id="senha" name="senha" placeholder="Senha">
+                                            </div>
+                                        </div>
+                                      
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-danger">Excluir</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        
                         {% endif %}
