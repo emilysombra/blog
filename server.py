@@ -11,7 +11,7 @@ from functions import (formato_permitido, get_usuarios, inserir_post,
                        usuario_pelo_email, get_posts, get_posts_por_page,
                        buscar_posts, post_por_url, usuario_pelo_nome,
                        editar_post, buscar_ads, get_popular_posts,
-                       incrementar_visita)
+                       incrementar_visita, editar_usuario)
 from classes import (Database, Pagination, RedisSessionInterface)
 
 import os
@@ -192,6 +192,30 @@ def adm_novo_post():
         return render_template('admin/novo-post.html', msg=1, autor=nome)
     else:
         return render_template('admin/novo-post.html', msg=0, autor=nome)
+
+
+@app.route('/usuarios/editar/', methods=['POST', 'GET'])
+def adm_editar_usuario():
+    if(not g.user):
+        return redirect(url_for('index'))
+
+    user = usuario_pelo_email(db, g.user)
+
+    if(request.method == 'POST'):
+        nome = request.form['nome']
+        sobrenome = request.form['sobrenome']
+        fb = request.form['facebook']
+        insta = request.form['instagram']
+        github = request.form['github']
+        linkedin = request.form['linkedin']
+        pesquisa = request.form['pesquisa']
+        descricao = request.form['descricao']
+
+        editar_usuario(db, nome, sobrenome, fb, insta, github, linkedin,
+                       pesquisa, descricao, g.user)
+        return redirect(url_for('adm_usuarios'))
+    else:
+        return render_template('admin/editar-usuario.html', user=user)
 
 
 @app.route('/posts/editar-post/', defaults={'url_post': None})

@@ -1,0 +1,102 @@
+{% include "includes/head.html" %}
+{% set nome = user[1] + ' ' + user[2] %}
+    <title>The Science's on the Table - Editar Usuário - {{ nome }}</title>
+</head>
+
+<!-- corpo do site -- >
+<body>
+    <!-- menu superior (fixado) -->
+{% include "includes/menu.html" %}
+    <!-- fim do menu superior (fixado) -->
+
+
+
+    <!-- inicio div de chamada do site -->
+{% include "admin/includes/chamada.html" %}
+    <!-- fim div de chamada do site -->
+
+
+    <!-- (new) inicio div de corpo do site -->
+    <div class="jumbotron-fluid">
+        <div class="container">
+            <!-- form de post novo -->
+            <div class="form-area">
+                <form role="form" method="post">
+                    <h2 class="h1-responsive font-weight-bold text-center my-5">Editar Usuário</h2>
+                    <div class="row">
+                        <div class="col">
+                            <!-- campo Nome-->
+                            <div class="form-group">
+                                <label for="titulo">Nome:</label>
+                                <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" value="{{ user[1] }}" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- campo Sobrenome-->
+                            <div class="form-group">
+                                <label for="titulo">Sobrenome:</label>
+                                <input type="text" class="form-control" id="sobrenome" name="sobrenome" placeholder="Sobrenome" value="{{ user[2] }}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col">
+                            <!-- campo Facebook-->
+                            <div class="form-group">
+                                <label for="titulo">Facebook:</label>
+                                <input type="text" class="form-control" id="facebook" name="facebook" placeholder="Facebook" value="{{ user[3] }}" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- campo Instagram-->
+                            <div class="form-group">
+                                <label for="titulo">Instagram:</label>
+                                <input type="text" class="form-control" id="instagram" name="instagram" placeholder="Instagram" value="{{ user[4] }}" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <!-- campo Github-->
+                            <div class="form-group">
+                                <label for="titulo">Github:</label>
+                                <input type="text" class="form-control" id="github" name="github" placeholder="Github" value="{{ user[5] }}" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- campo Linkedin-->
+                            <div class="form-group">
+                                <label for="titulo">Linkedin:</label>
+                                <input type="text" class="form-control" id="linkedin" name="linkedin" placeholder="Linkedin" value="{{ user[6] }}" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- campo Pesquisa-->
+                    <div class="form-group">
+                        <label for="titulo">Pesquisa:</label>
+                        <input type="text" class="form-control" id="pesquisa" name="pesquisa" placeholder="Pesquisa" value="{{ user[8] }}" required>
+                    </div>
+
+                    <!-- campo Descrição-->
+                    <div class="form-group">
+                        <label for="titulo">Descrição:</label>
+                        <textarea class="form-control" type="textarea" name="descricao" id="descricao" placeholder="Descrição do Autor" rows="7">{{ user[7] }}</textarea>
+                    </div>
+                    
+                    <!-- botão de envio -->
+                    <button type="submit" id="enviar" name="enviar" class="btn btn-success pull-right">Enviar</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- (new) fim div de corpo do site -->
+
+
+    <!-- rodapé do site -->
+{% include "includes/rodape.html" %}
