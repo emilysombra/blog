@@ -74,13 +74,14 @@ def ver_post(url_post):
     if(not url_post):
         return redirect(url_for('posts'))
 
-    post = post_por_url(db, url_post.lower())
+    post = dba.select_posts(url=url_post.lower())
     populares = get_popular_posts(db)
     incrementar_visita(db, url_post)
 
     if(len(post) > 0):
-        autor = dba.select_users(nome=post[0][4].split()[0])
-        return render_template('ver-post.html', post=post[0], autor=autor,
+        post = post[0]
+        autor = dba.select_users(nome=post[4].split()[0], max_results=1)
+        return render_template('ver-post.html', post=post, autor=autor,
                                populares=populares)
     else:
         return redirect(url_for('posts'))

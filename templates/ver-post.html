@@ -9,7 +9,7 @@
 {% include "includes/chamada.html" %}
 
 {% set foto = "/static/{}".format(post[3]) %}
-{% set img = "/static/{}".format(autor[6]) %}
+{% set img = "/static/{}".format(autor[9]) %}
 
     <div class="jumbotron-fluid">
         <div class="container">
@@ -42,19 +42,19 @@
                                 <div class="col-md-6">
                                     <div class="bio-content">
                                         <h4>{{ post[4] }}</h4>
-                                        <h6>{{ autor[5] }}</h6>
-                                        <p>{{ autor[4] }}</p>
+                                        <h6>{{ autor[8] }}</h6>
+                                        <p>{{ autor[7] }}</p>
                                         <!-- redes sociais -->
-                                        <a class="fa-lg fb-ic" href="{{ autor[0] }}" target="_blank" style="color: #133d06;">
+                                        <a class="fa-lg fb-ic" href="{{ autor[3] }}" target="_blank" style="color: #133d06;">
                                             <i class="fab fa-facebook"></i>
                                         </a>
-                                        <a class="fa-lg ins-ic" href="{{ autor[1] }}" target="_blank" style="color: #133d06;">
+                                        <a class="fa-lg ins-ic" href="{{ autor[4] }}" target="_blank" style="color: #133d06;">
                                             <i class="fab fa-instagram"></i>
                                         </a>
-                                        <a class="fa-lg git-ic" href="{{ autor[2] }}" target="_blank" style="color: #133d06;">
+                                        <a class="fa-lg git-ic" href="{{ autor[5] }}" target="_blank" style="color: #133d06;">
                                             <i class="fab fa-github"></i>
                                         </a>
-                                        <a class="fa-lg li-ic" href="{{ autor[3] }}" target="_blank" style="color: #133d06;">
+                                        <a class="fa-lg li-ic" href="{{ autor[6] }}" target="_blank" style="color: #133d06;">
                                             <i class="fab fa-linkedin-in"></i>
                                         </a>
                                     </div>

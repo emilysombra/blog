@@ -50,11 +50,25 @@ class Database:
 
 
 class Database_access:
+    '''
+    Classe para acesso ao banco de dados PostgreSQL
+    '''
+
     def __init__(self):
         self.db = Database()
 
     def select_users(self, nome=None, email=None, max_results=0):
+        '''
+        Método para realizar buscas de usuários
+        Parâmetros:
+        nome: busca por um nome específico
+        email: busca por um email eespecífico
+        max_results: limita os resultados
+        '''
+
+        # query de busca
         q = "SELECT * FROM usuarios {}ORDER BY nome;"
+        # adiciona possíveis condições na busca
         if(email):
             condition = "WHERE email='{}' ".format(email)
             q = q.format(condition)
@@ -63,7 +77,9 @@ class Database_access:
             q = q.format(condition)
         else:
             q = q.format('')
+        # executa a busca
         self.db.cur.execute(q)
+        # limita os resultados e retorna
         if(max_results == 1):
             return self.db.cur.fetchall()[0]
         elif(max_results > 1):
@@ -71,11 +87,7 @@ class Database_access:
         else:
             return self.db.cur.fetchall()
 
-    def select_posts(self, active_only=True, ultimos=0, busca=None):
-        if(busca):
-            busca = '%' + busca.lower() + '%'
-            ultimos = 0
-
+    def select_posts(self, active_only=True, ultimos=0, busca=None, url=None):
         q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
             "CONCAT(nome, ' ', sobrenome), texto, ativo, url FROM posts as p" \
             " INNER JOIN usuarios as u ON p.autor=u.id {}ORDER BY p.id desc"
@@ -85,9 +97,13 @@ class Database_access:
             q = q.format('WHERE ativo=0 {}')
 
         if(busca):
+            busca = '%' + busca.lower() + '%'
+            ultimos = 0
             s = "AND (LOWER(texto) LIKE '{}' OR LOWER(titulo) LIKE '{}') "
             s = s.format(busca, busca)
             q = q.format(s)
+        elif(url):
+            q = q.format("AND url='{}' ".format(url))
         else:
             q = q.format('')
 

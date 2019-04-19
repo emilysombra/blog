@@ -44,6 +44,7 @@ def post_por_url(db, url):
 
     q = q.format(url)
     db.cur.execute(q)
+    print(q)
     return db.cur.fetchall()
 
 
