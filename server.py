@@ -7,12 +7,12 @@ from argon2 import PasswordHasher
 
 from datetime import timedelta, datetime
 
-from functions import (formato_permitido, get_usuarios, inserir_post,
-                       usuario_pelo_email, get_posts, get_posts_por_page,
-                       buscar_posts, post_por_url, usuario_pelo_nome,
+from functions import (formato_permitido, inserir_post, get_posts,
+                       get_posts_por_page, buscar_posts, post_por_url,
                        editar_post, buscar_ads, get_popular_posts,
                        incrementar_visita, editar_usuario)
-from classes import (Database, Pagination, RedisSessionInterface)
+from classes import (Database, Pagination, RedisSessionInterface,
+                     Database_access)
 
 import os
 import requests
@@ -20,6 +20,7 @@ import pickle
 
 PER_PAGE = 10
 db = Database()
+dba = Database_access()
 app = Flask(__name__)
 app.session_interface = RedisSessionInterface()
 app.secret_key = os.urandom(24)
@@ -35,7 +36,7 @@ MAILGUN_API_KEY = credentials['key']
 
 @app.route('/')
 def index():
-    posts = get_posts(db, ultimos=10)
+    posts = dba.select_posts(ultimos=10)
     return render_template('index.html', posts=posts)
 
 
@@ -56,7 +57,7 @@ def posts(pag):
     except ValueError:
         return redirect('/posts/1')
 
-    listposts = get_posts(db)
+    listposts = dba.select_posts()
     num_posts = len(listposts)
 
     listposts = get_posts_por_page(listposts, page=pag, per_page=PER_PAGE)
@@ -79,7 +80,7 @@ def ver_post(url_post):
     incrementar_visita(db, url_post)
 
     if(len(post) > 0):
-        autor = usuario_pelo_nome(db, post[0][4].split()[0])
+        autor = dba.select_users(nome=post[0][4].split()[0])
         return render_template('ver-post.html', post=post[0], autor=autor,
                                populares=populares)
     else:
@@ -88,7 +89,7 @@ def ver_post(url_post):
 
 @app.route('/sobre/')
 def sobre():
-    usuarios = get_usuarios(db)
+    usuarios = dba.select_users()
     return render_template('sobre.html', usuarios=usuarios)
 
 
@@ -142,7 +143,7 @@ def adm_excluir_post(url_post):
         return redirect(url_for('posts'))
 
     if(request.method == 'POST'):
-        senha_user = usuario_pelo_email(db, g.user)[11]
+        senha_user = dba.select_users(email=g.user, max_results=1)[11]
         ph = PasswordHasher()
         try:
             ph.verify(senha_user, request.form['senha'])
@@ -161,7 +162,7 @@ def adm_novo_post():
     if(not g.user):
         return redirect(url_for('adm_login'))
 
-    autor = usuario_pelo_email(db, g.user)
+    autor = dba.select_users(email=g.user, max_results=1)
     nome = autor[1] + ' ' + autor[2]
 
     if(request.method == 'POST'):
@@ -199,7 +200,7 @@ def adm_editar_usuario():
     if(not g.user):
         return redirect(url_for('index'))
 
-    user = usuario_pelo_email(db, g.user)
+    user = dba.select_users(email=g.user, max_results=1)
 
     if(request.method == 'POST'):
         nome = request.form['nome']
@@ -251,7 +252,7 @@ def adm_editar_post(url_post):
 def adm_usuarios():
     if(g.user):
         return render_template('admin/ver-usuarios.html',
-                               autores=get_usuarios(db))
+                               autores=dba.select_users())
 
     return redirect(url_for('adm_login'))
 
@@ -271,7 +272,7 @@ def adm_login():
         session.pop('user', None)
 
         try:
-            user = usuario_pelo_email(db, request.form['email'])
+            user = dba.select_users(email=request.form['email'], max_results=1)
         except Exception:
             return render_template('/admin/login.html', msg=1, logged=0)
 

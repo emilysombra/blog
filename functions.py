@@ -3,25 +3,6 @@ def formato_permitido(nome):
     return '.' in nome and nome.rsplit('.', 1)[1].lower() in EXTENSOES
 
 
-def get_usuarios(db):
-    query = 'SELECT * FROM usuarios ORDER BY nome;'
-    db.cur.execute(query)
-    return db.cur.fetchall()
-
-
-def usuario_pelo_email(db, email):
-    q = "SELECT * FROM usuarios WHERE email='{}';".format(email)
-    db.cur.execute(q)
-    return db.cur.fetchall()[0]
-
-
-def usuario_pelo_nome(db, nome):
-    q = "SELECT facebook, instagram, github, linkedin, descricao, pesquisa, " \
-        "dir_foto, email FROM usuarios WHERE nome='{}';".format(nome)
-    db.cur.execute(q)
-    return db.cur.fetchall()[0]
-
-
 def get_posts(db, active_only=True, ultimos=0):
     q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
         "CONCAT(nome, ' ', sobrenome), texto, ativo, url FROM posts as p " \

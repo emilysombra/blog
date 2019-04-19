@@ -49,6 +49,45 @@ class Database:
         self.cur = self.conn.cursor()
 
 
+class Database_access:
+    def __init__(self):
+        self.db = Database()
+
+    def select_users(self, nome=None, email=None, max_results=0):
+        q = "SELECT * FROM usuarios {}ORDER BY nome;"
+        if(email):
+            condition = "WHERE email='{}' ".format(email)
+            q = q.format(condition)
+        elif(nome):
+            condition = "WHERE nome='{}' ".format(nome)
+            q = q.format(condition)
+        else:
+            q = q.format('')
+        self.db.cur.execute(q)
+        if(max_results == 1):
+            return self.db.cur.fetchall()[0]
+        elif(max_results > 1):
+            return self.db.cur.fetchall()[:max_results]
+        else:
+            return self.db.cur.fetchall()
+
+    def select_posts(self, active_only=True, ultimos=0):
+        q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
+            "CONCAT(nome, ' ', sobrenome), texto, ativo, url FROM posts as p" \
+            " INNER JOIN usuarios as u ON p.autor=u.id {}ORDER BY p.id desc"
+        if(active_only):
+            q = q.format('WHERE ativo=1 ')
+        else:
+            q = q.format('WHERE ativo=0 ')
+
+        if(ultimos > 0):
+            q += " LIMIT {};".format(ultimos)
+        else:
+            q += ';'
+        self.db.cur.execute(q)
+        return self.db.cur.fetchall()
+
+
 class RedisSession(CallbackDict, SessionMixin):
 
     def __init__(self, initial=None, sid=None, new=False):
