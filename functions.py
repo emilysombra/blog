@@ -3,24 +3,6 @@ def formato_permitido(nome):
     return '.' in nome and nome.rsplit('.', 1)[1].lower() in EXTENSOES
 
 
-def get_posts(db, active_only=True, ultimos=0):
-    q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
-        "CONCAT(nome, ' ', sobrenome), texto, ativo, url FROM posts as p " \
-        "INNER JOIN usuarios as u ON p.autor=u.id {}" \
-        "ORDER BY p.id desc"
-    if(active_only):
-        q = q.format('WHERE ativo=1 ')
-    else:
-        q = q.format('WHERE ativo=0 ')
-
-    if(ultimos > 0):
-        q += " LIMIT {};".format(ultimos)
-    else:
-        q += ';'
-    db.cur.execute(q)
-    return db.cur.fetchall()
-
-
 def inserir_post(db, titulo, autor, data, img, texto, ativo):
     url = gerar_url(db, titulo, autor)
 
@@ -53,21 +35,6 @@ def get_posts_por_page(posts, page=1, per_page=10):
     init = per_page * (page - 1)
     fim = init + per_page
     return posts[init:fim]
-
-
-def buscar_posts(db, src, active_only=True):
-    src = '%' + src.lower() + '%'
-    q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
-        "CONCAT(nome, ' ', sobrenome), texto, ativo, url FROM posts AS p " \
-        "INNER JOIN usuarios AS u ON p.autor=u.id WHERE (LOWER(texto) " \
-        "LIKE '{}' OR LOWER(titulo) LIKE '{}'){} ORDER BY p.id desc;"
-    if(active_only):
-        q = q.format(src, src, ' AND ativo=1')
-    else:
-        q = q.format(src, src, '')
-
-    db.cur.execute(q)
-    return db.cur.fetchall()
 
 
 def post_por_url(db, url):

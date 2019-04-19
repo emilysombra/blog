@@ -7,10 +7,9 @@ from argon2 import PasswordHasher
 
 from datetime import timedelta, datetime
 
-from functions import (formato_permitido, inserir_post, get_posts,
-                       get_posts_por_page, buscar_posts, post_por_url,
-                       editar_post, buscar_ads, get_popular_posts,
-                       incrementar_visita, editar_usuario)
+from functions import (formato_permitido, inserir_post, post_por_url,
+                       get_posts_por_page, editar_post, buscar_ads,
+                       get_popular_posts, incrementar_visita, editar_usuario)
 from classes import (Database, Pagination, RedisSessionInterface,
                      Database_access)
 
@@ -45,7 +44,7 @@ def busca():
     if('q' not in request.args):
         return redirect(url_for('posts'))
 
-    posts = buscar_posts(db, request.args['q'])
+    posts = dba.select_posts(busca=request.args['q'])
     return render_template('busca.html', q=request.args['q'], posts=posts)
 
 
@@ -130,7 +129,8 @@ def contato():
 @app.route('/admin/')
 def adm_index():
     if(g.user):
-        posts = get_posts(db, False)
+        # posts = get_posts(db, False)
+        posts = dba.select_posts(active_only=False)
         return render_template('admin/index.html', posts=posts)
 
     return redirect(url_for('adm_login'))

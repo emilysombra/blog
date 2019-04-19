@@ -71,14 +71,25 @@ class Database_access:
         else:
             return self.db.cur.fetchall()
 
-    def select_posts(self, active_only=True, ultimos=0):
+    def select_posts(self, active_only=True, ultimos=0, busca=None):
+        if(busca):
+            busca = '%' + busca.lower() + '%'
+            ultimos = 0
+
         q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
             "CONCAT(nome, ' ', sobrenome), texto, ativo, url FROM posts as p" \
             " INNER JOIN usuarios as u ON p.autor=u.id {}ORDER BY p.id desc"
         if(active_only):
-            q = q.format('WHERE ativo=1 ')
+            q = q.format('WHERE ativo=1 {}')
         else:
-            q = q.format('WHERE ativo=0 ')
+            q = q.format('WHERE ativo=0 {}')
+
+        if(busca):
+            s = "AND (LOWER(texto) LIKE '{}' OR LOWER(titulo) LIKE '{}') "
+            s = s.format(busca, busca)
+            q = q.format(s)
+        else:
+            q = q.format('')
 
         if(ultimos > 0):
             q += " LIMIT {};".format(ultimos)
