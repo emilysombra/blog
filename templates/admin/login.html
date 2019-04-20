@@ -7,13 +7,15 @@
     <form class="form-signin" method="post">
         <img class="mb-4" src="{{url_for('.static', filename='logo.png')}}" alt="" width="72" height="72">
         <h1 class="h3 mb-3 font-weight-normal">Entrar</h1>
-        <label for="inputEmail" class="sr-only">Email address</label>
+        <label for="inputEmail" class="sr-only">E-mail</label>
         <input type="email" id="inputEmail" class="form-control" placeholder="E-mail" name="email" required autofocus>
         <label for="inputPassword" class="sr-only">Senha</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Senha" name="senha" required>
         <button class="btn btn-lg btn-success btn-block" type="submit">Entrar</button>
-        <p class="mt-5 mb-3 text-muted"><span id="copyright">© 2018 Copyright: The Science's on the Table</span></p>
+        <p class="mt-5 mb-3 text-muted"><span id="copyright">© 2019 Copyright: The Science's on the Table</span></p>
     </form>
+    <!-- js do ano -->
+    <script type="text/javascript" src="{{url_for('.static', filename='js/copyright.js')}}"></script>
 </body>
 
 <style type="text/css">
@@ -67,6 +69,4 @@ body {
   border-top-right-radius: 0;
 }
 </style>
-
-<!-- js do ano -->
-<script type="text/javascript" src="{{url_for('.static', filename='js/copyright.js')}}"></script>
+</html>

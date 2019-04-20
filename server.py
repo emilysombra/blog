@@ -1,15 +1,13 @@
 from flask import (Flask, render_template, request, session, redirect,
                    url_for, g)
 
-from werkzeug.utils import secure_filename as secure
-
 from argon2 import PasswordHasher
 
-from datetime import timedelta, datetime
+from datetime import timedelta
 
-from functions import (formato_permitido, inserir_post, post_por_url,
-                       get_posts_por_page, editar_post, buscar_ads,
-                       get_popular_posts, incrementar_visita, editar_usuario)
+from functions import (editar_post,
+                       get_posts_por_page, buscar_ads, editar_usuario,
+                       incrementar_visita, novo_post)
 from classes import (Database, Pagination, RedisSessionInterface,
                      Database_access)
 
@@ -75,7 +73,7 @@ def ver_post(url_post):
         return redirect(url_for('posts'))
 
     post = dba.select_posts(url=url_post.lower())
-    populares = get_popular_posts(db)
+    populares = dba.select_posts(populares=True)
     incrementar_visita(db, url_post)
 
     if(len(post) > 0):
@@ -130,7 +128,6 @@ def contato():
 @app.route('/admin/')
 def adm_index():
     if(g.user):
-        # posts = get_posts(db, False)
         posts = dba.select_posts(active_only=False)
         return render_template('admin/index.html', posts=posts)
 
@@ -167,31 +164,11 @@ def adm_novo_post():
     nome = autor[1] + ' ' + autor[2]
 
     if(request.method == 'POST'):
-        alvo = os.path.join(app_root, 'static/img/posts/')
-
-        titulo = request.form['titulo']
-
-        autor = request.form['autor']
-
-        agr = str(datetime.now())
-        data = (agr.split(' ')[0]).split('-')[1]
-        data += ('/' + (agr.split(' ')[0]).split('-')[2])
-        data += ('/' + (agr.split(' ')[0]).split('-')[0])
-
-        img = request.files['img']
-        nome_img = secure(img.filename)
-        if(not formato_permitido(nome_img)):
+        r = novo_post(dba, request)
+        if(r == -1):
             return render_template('admin/novo-post.html', msg=2)
-        destino = '/'.join([alvo, nome_img])
-        img.save(destino)
-        img = 'img/posts/' + nome_img
-
-        texto = request.form['texto']
-
-        ativo = len(request.form.getlist('ativo'))
-
-        inserir_post(db, titulo, autor, data, img, texto, ativo)
-        return render_template('admin/novo-post.html', msg=1, autor=nome)
+        else:
+            return render_template('admin/novo-post.html', msg=1, autor=nome)
     else:
         return render_template('admin/novo-post.html', msg=0, autor=nome)
 
@@ -226,7 +203,7 @@ def adm_editar_post(url_post):
     if((not g.user) or (not url_post)):
         return redirect(url_for('posts'))
 
-    post = post_por_url(db, url_post.lower())
+    post = dba.select_posts(url=url_post.lower())
     if(request.method == 'POST'):
         if(len(post) == 0):
             return redirect(url_for('posts'))
@@ -237,7 +214,7 @@ def adm_editar_post(url_post):
 
         editar_post(db, post, titulo, autor, texto, ativo)
 
-        post = post_por_url(db, url_post.lower())
+        post = dba.select_posts(url=url_post.lower())
         return render_template('admin/editar-post.html', post=post[0],
                                autor=post[0][4], msg=1)
 

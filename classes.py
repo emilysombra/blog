@@ -6,10 +6,10 @@ from uuid import uuid4
 from datetime import timedelta
 import psycopg2
 import pickle
+from functions import gerar_url
 
 
 class Pagination(object):
-
     def __init__(self, page, per_page, total_count):
         self.page = page
         self.per_page = per_page
@@ -87,32 +87,83 @@ class Database_access:
         else:
             return self.db.cur.fetchall()
 
-    def select_posts(self, active_only=True, ultimos=0, busca=None, url=None):
+    def select_posts(self, active_only=True, ultimos=0, busca=None, url=None,
+                     populares=False):
+        '''
+        Método para realizar buscas de posts
+        Parâmetros:
+        active_only: apenas posts ativos
+        ultimos: quantos posts devem ser exibidos (0 busca todos)
+        busca: posts com algum conteudo especifico
+        url: post com uma certa url
+        populares: busca os posts mais visitados
+        '''
+
+        # query de busca
         q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
             "CONCAT(nome, ' ', sobrenome), texto, ativo, url FROM posts as p" \
-            " INNER JOIN usuarios as u ON p.autor=u.id {}ORDER BY p.id desc"
+            " INNER JOIN usuarios as u ON p.autor=u.id {}ORDER BY {} desc"
+
+        # caso populares seja true, seta variaveis e ordena por visitas
+        if(populares):
+            active_only = True
+            ultimos = 5
+            q = q.format('{}', 'visitas')
+        # caso populares seja false, ordena por id
+        else:
+            q = q.format('{}', 'p.id')
+
+        # configura a seleção de posts ativos ou não
         if(active_only):
             q = q.format('WHERE ativo=1 {}')
         else:
             q = q.format('WHERE ativo=0 {}')
 
+        # caso haja uma busca, configura para buscar pelo titulo ou texto
         if(busca):
             busca = '%' + busca.lower() + '%'
             ultimos = 0
             s = "AND (LOWER(texto) LIKE '{}' OR LOWER(titulo) LIKE '{}') "
             s = s.format(busca, busca)
             q = q.format(s)
+        # caso haja uma url, busca por url
         elif(url):
             q = q.format("AND url='{}' ".format(url))
+        # busca todos os posts
         else:
             q = q.format('')
 
+        # limita os resultados ou não
         if(ultimos > 0):
             q += " LIMIT {};".format(ultimos)
         else:
             q += ';'
+
+        # realiza a busca e retorna
         self.db.cur.execute(q)
         return self.db.cur.fetchall()
+
+    def insert_post(self, titulo, autor, data, img, texto, ativo):
+        '''
+        Método para inserir post no banco de dados
+        Cada parâmetro é um campo da tabela
+        '''
+
+        # gera uma url para o post
+        url = gerar_url(self, titulo, autor)
+        # busca o id do autor do post
+        autor = autor.split()
+        q = "SELECT id from usuarios WHERE nome='{}' AND sobrenome='{}';"
+        q = q.format(autor[0], autor[1])
+        self.db.cur.execute(q)
+        autor = self.db.cur.fetchall()[0][0]
+        # query para inserir o post
+        q = "INSERT INTO posts (titulo, autor, data, imagem, texto, ativo, " \
+            "url) VALUES ('{}', {}, '{}', '{}', '{}', {}, '{}');"
+        q = q.format(titulo, autor, data, img, texto, ativo, url)
+        # executa a query
+        self.db.cur.execute(q)
+        self.db.conn.commit()
 
 
 class RedisSession(CallbackDict, SessionMixin):
