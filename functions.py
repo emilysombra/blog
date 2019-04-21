@@ -35,17 +35,15 @@ def novo_post(dba, requisicao):
     return 1
 
 
-def editar_post(db, post, titulo, autor, texto, ativo):
-    q = "SELECT id from usuarios WHERE nome='{}' AND sobrenome='{}';"
-    q = q.format(autor.split()[0], autor.split()[1])
-    db.cur.execute(q)
-    autor = db.cur.fetchall()[0][0]
-
-    q = "UPDATE posts SET titulo='{}', autor={}, texto='{}', ativo={} " \
-        "WHERE id={};".format(titulo, autor, texto, ativo, post[0][0])
-
-    db.cur.execute(q)
-    db.conn.commit()
+def edit_post(dba, requisicao, post):
+    if(len(post) == 0):
+        return -1
+    titulo = requisicao.form['titulo']
+    autor = requisicao.form['autor']
+    texto = requisicao.form['texto']
+    ativo = len(requisicao.form.getlist('ativo'))
+    dba.update_post(post[0][0], titulo, autor, texto, ativo)
+    return 1
 
 
 def get_posts_por_page(posts, page=1, per_page=10):
@@ -71,18 +69,6 @@ def gerar_url(dba, titulo, autor):
         posts = dba.select_posts(url=url)
 
     return url
-
-
-def buscar_ads(db):
-    db.cur.execute("SELECT * FROM ads;")
-    return db.cur.fetchall()
-
-
-def get_popular_posts(db):
-    q = "SELECT titulo, url, visitas FROM posts WHERE ativo=1 "\
-        "ORDER BY visitas DESC LIMIT 5;"
-    db.cur.execute(q)
-    return db.cur.fetchall()
 
 
 def incrementar_visita(db, url):

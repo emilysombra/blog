@@ -1,16 +1,12 @@
 from flask import (Flask, render_template, request, session, redirect,
                    url_for, g)
-
 from argon2 import PasswordHasher
-
 from datetime import timedelta
-
-from functions import (editar_post,
-                       get_posts_por_page, buscar_ads, editar_usuario,
-                       incrementar_visita, novo_post)
-from classes import (Database, Pagination, RedisSessionInterface,
-                     Database_access)
-
+from pagination import Pagination
+from database import Database_access, Database
+from functions import (edit_post, editar_usuario, novo_post,
+                       get_posts_por_page, incrementar_visita)
+from sessions import RedisSessionInterface
 import os
 import requests
 import pickle
@@ -167,8 +163,8 @@ def adm_novo_post():
         r = novo_post(dba, request)
         if(r == -1):
             return render_template('admin/novo-post.html', msg=2)
-        else:
-            return render_template('admin/novo-post.html', msg=1, autor=nome)
+
+        return render_template('admin/novo-post.html', msg=1, autor=nome)
     else:
         return render_template('admin/novo-post.html', msg=0, autor=nome)
 
@@ -205,14 +201,9 @@ def adm_editar_post(url_post):
 
     post = dba.select_posts(url=url_post.lower())
     if(request.method == 'POST'):
-        if(len(post) == 0):
+        r = edit_post(dba, request, post)
+        if(r == -1):
             return redirect(url_for('posts'))
-        titulo = request.form['titulo']
-        autor = request.form['autor']
-        texto = request.form['texto']
-        ativo = len(request.form.getlist('ativo'))
-
-        editar_post(db, post, titulo, autor, texto, ativo)
 
         post = dba.select_posts(url=url_post.lower())
         return render_template('admin/editar-post.html', post=post[0],
@@ -268,7 +259,7 @@ def adm_login():
 
 @app.before_request
 def before_request():
-    g.ads = buscar_ads(db)
+    g.ads = dba.select_ads()
     g.user = None
     if('user' in session):
         g.user = session['user']
