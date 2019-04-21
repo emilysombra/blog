@@ -4,8 +4,7 @@ from argon2 import PasswordHasher
 from datetime import timedelta
 from pagination import Pagination
 from database import Database_access, Database
-from functions import (edit_post, editar_usuario, novo_post,
-                       get_posts_por_page, incrementar_visita)
+from functions import edit_post, novo_post, edit_user, get_posts_por_page
 from sessions import RedisSessionInterface
 import os
 import requests
@@ -70,7 +69,7 @@ def ver_post(url_post):
 
     post = dba.select_posts(url=url_post.lower())
     populares = dba.select_posts(populares=True)
-    incrementar_visita(db, url_post)
+    dba.insert_visita(url_post)
 
     if(len(post) > 0):
         post = post[0]
@@ -177,17 +176,7 @@ def adm_editar_usuario():
     user = dba.select_users(email=g.user, max_results=1)
 
     if(request.method == 'POST'):
-        nome = request.form['nome']
-        sobrenome = request.form['sobrenome']
-        fb = request.form['facebook']
-        insta = request.form['instagram']
-        github = request.form['github']
-        linkedin = request.form['linkedin']
-        pesquisa = request.form['pesquisa']
-        descricao = request.form['descricao']
-
-        editar_usuario(db, nome, sobrenome, fb, insta, github, linkedin,
-                       pesquisa, descricao, g.user)
+        edit_user(dba, request, g.user)
         return redirect(url_for('adm_usuarios'))
     else:
         return render_template('admin/editar-usuario.html', user=user)

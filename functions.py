@@ -71,18 +71,14 @@ def gerar_url(dba, titulo, autor):
     return url
 
 
-def incrementar_visita(db, url):
-    q = "UPDATE posts SET visitas = visitas + 1 WHERE url='{}';".format(url)
-    db.cur.execute(q)
-    db.conn.commit()
-
-
-def editar_usuario(db, nome, sobrenome, fb, insta, github, linkedin, pesquisa,
-                   descricao, email):
-    q = "UPDATE usuarios SET nome='{}', sobrenome='{}', facebook='{}'," \
-        " instagram='{}', github='{}', linkedin='{}', pesquisa='{}', " \
-        " descricao='{}' WHERE email='{}';"
-    q = q.format(nome, sobrenome, fb, insta, github, linkedin, pesquisa,
-                 descricao, email)
-    db.cur.execute(q)
-    db.conn.commit()
+def edit_user(dba, requisicao, email):
+    nome = requisicao.form['nome']
+    sobrenome = requisicao.form['sobrenome']
+    fb = requisicao.form['facebook']
+    insta = requisicao.form['instagram']
+    github = requisicao.form['github']
+    linkedin = requisicao.form['linkedin']
+    pesquisa = requisicao.form['pesquisa']
+    descricao = requisicao.form['descricao']
+    dba.update_users(nome, sobrenome, fb, insta, github, linkedin, pesquisa,
+                     descricao, email)

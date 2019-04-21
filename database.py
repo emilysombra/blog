@@ -20,6 +20,9 @@ class Database_access:
         self.db = Database()
 
     def select_ads(self):
+        '''
+        Retorna a tabela de anúncios
+        '''
         self.db.cur.execute("SELECT * FROM ads;")
         return self.db.cur.fetchall()
 
@@ -131,6 +134,15 @@ class Database_access:
         self.db.cur.execute(q)
         self.db.conn.commit()
 
+    def insert_visita(self, url):
+        '''
+        Incrementa o contador de visitas de um post
+        '''
+        q = "UPDATE posts SET visitas = visitas + 1 WHERE url='{}';"
+        q = q.format(url)
+        self.db.cur.execute(q)
+        self.db.conn.commit()
+
     def update_post(self, id_post, titulo, autor, texto, ativo):
         '''
         Método para alterar um post do banco de dados
@@ -139,9 +151,25 @@ class Database_access:
         # busca o id do autor do post
         autor = autor.split()
         autor = self.select_users(nome=autor[0], sobrenome=autor[1])[0][0]
-        # query para inserir o post
+        # query para editar o post
         q = "UPDATE posts SET titulo='{}', autor={}, texto='{}', ativo={} " \
             "WHERE id={};".format(titulo, autor, texto, ativo, id_post)
+        # executa a query
+        self.db.cur.execute(q)
+        self.db.conn.commit()
+
+    def update_users(self, nome, sobrenome, fb, insta, github, linkedin,
+                     pesquisa, descricao, email):
+        '''
+        Método para alterar um usuário do banco de dados
+        Cada parâmetro é um campo da tabela
+        '''
+        # query para editar o usuário
+        q = "UPDATE usuarios SET nome='{}', sobrenome='{}', facebook='{}'," \
+            " instagram='{}', github='{}', linkedin='{}', pesquisa='{}', " \
+            " descricao='{}' WHERE email='{}';"
+        q = q.format(nome, sobrenome, fb, insta, github, linkedin, pesquisa,
+                     descricao, email)
         # executa a query
         self.db.cur.execute(q)
         self.db.conn.commit()
