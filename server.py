@@ -136,16 +136,11 @@ def adm_excluir_post(url_post):
         return redirect(url_for('posts'))
 
     if(request.method == 'POST'):
-        senha_user = dba.select_users(email=g.user, max_results=1)[11]
-        ph = PasswordHasher()
-        try:
-            ph.verify(senha_user, request.form['senha'])
-            q = "DELETE FROM posts WHERE url='{}';".format(url_post)
-            db.cur.execute(q)
-            db.conn.commit()
+        r = dba.delete_post(g.user, request.form['senha'], url_post)
+        if(r):
             return redirect(url_for('index'))
-        except Exception:
-            return redirect('/posts/ver-post/{}/'.format(url_post))
+
+        return redirect('/posts/ver-post/{}/'.format(url_post))
     else:
         return redirect(url_for('posts'))
 

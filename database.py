@@ -1,5 +1,6 @@
 import psycopg2
 import pickle
+from argon2 import PasswordHasher
 from functions import gerar_url
 
 
@@ -173,3 +174,22 @@ class Database_access:
         # executa a query
         self.db.cur.execute(q)
         self.db.conn.commit()
+
+    def __auth_user(self, email, senha):
+        senha_user = self.select_users(email=email, max_results=1)[11]
+        ph = PasswordHasher()
+        try:
+            ph.verify(senha_user, senha)
+            return 1
+        except Exception:
+            return 0
+
+    def delete_post(self, email, senha, url):
+        r = self.__auth_user(email, senha)
+        if(r):
+            q = "DELETE FROM posts WHERE url='{}';".format(url)
+            self.db.cur.execute(q)
+            self.db.conn.commit()
+            return 1
+        else:
+            return 0
