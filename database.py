@@ -175,7 +175,7 @@ class Database_access:
         self.db.cur.execute(q)
         self.db.conn.commit()
 
-    def __auth_user(self, email, senha):
+    def auth_user(self, email, senha):
         senha_user = self.select_users(email=email, max_results=1)[11]
         ph = PasswordHasher()
         try:
@@ -185,7 +185,7 @@ class Database_access:
             return 0
 
     def delete_post(self, email, senha, url):
-        r = self.__auth_user(email, senha)
+        r = self.auth_user(email, senha)
         if(r):
             q = "DELETE FROM posts WHERE url='{}';".format(url)
             self.db.cur.execute(q)

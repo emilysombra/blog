@@ -1,14 +1,11 @@
 from flask import (Flask, render_template, request, session, redirect,
                    url_for, g)
-from argon2 import PasswordHasher
 from datetime import timedelta
 from pagination import Pagination
 from database import Database_access, Database
-from functions import edit_post, novo_post, edit_user, get_posts_por_page
+from functions import edit_post, novo_post, edit_user, get_posts_por_page, mail
 from sessions import RedisSessionInterface
 import os
-import requests
-import pickle
 
 PER_PAGE = 10
 db = Database()
@@ -18,10 +15,6 @@ app.session_interface = RedisSessionInterface()
 app.secret_key = os.urandom(24)
 app_root = os.path.dirname(os.path.abspath(__file__))
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
-
-credentials = pickle.load(open('mailgun.pkl', 'rb'))
-MAILGUN_DOMAIN_NAME = credentials['nome']
-MAILGUN_API_KEY = credentials['key']
 
 # paginas user
 
@@ -89,28 +82,7 @@ def sobre():
 @app.route('/contato/', methods=['GET', 'POST'])
 def contato():
     if(request.method == 'POST'):
-        nome = request.form['nome'] if request.form['nome'] else 'Anônimo'
-        email = request.form['email'] if request.form['email'] else 'Anônimo'
-        msg = request.form['msg']
-
-        corpo = "Mensagem enviada por {}.\n".format(nome)
-        corpo += "E-mail: {}\n\n".format(email)
-        corpo += "Mensagem:\n{}\n".format(msg)
-
-        assunto = "Contato - The Science's on the Table ({})".format(nome)
-
-        url = 'https://api.mailgun.net/v3/{}/messages'
-        url = url.format(MAILGUN_DOMAIN_NAME)
-        auth = ('api', MAILGUN_API_KEY)
-        dados = {
-            'from': 'Mailgun User <postmaster@{}>'.format(MAILGUN_DOMAIN_NAME),
-            'to': ['marcos.sombraaa@gmail.com'],
-            'subject': assunto,
-            'text': corpo
-        }
-
-        response = requests.post(url, auth=auth, data=dados)
-        response.raise_for_status()
+        mail(request)
 
         return render_template('contato.html', msg=1)
     else:
@@ -223,19 +195,12 @@ def adm_login():
 
     if(request.method == 'POST'):
         session.pop('user', None)
-
-        try:
-            user = dba.select_users(email=request.form['email'], max_results=1)
-        except Exception:
-            return render_template('/admin/login.html', msg=1, logged=0)
-
-        ph = PasswordHasher()
-        try:
-            ph.verify(user[11], request.form['senha'])
+        r = dba.auth_user(request.form['email'], request.form['senha'])
+        if(r):
             session.permanent = True
-            session['user'] = user[10]
+            session['user'] = request.form['email']
             return redirect(url_for('adm_index'))
-        except Exception:
+        else:
             return render_template('/admin/login.html', msg=1, logged=0)
     else:
         return render_template('/admin/login.html')

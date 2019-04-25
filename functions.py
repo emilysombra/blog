@@ -1,4 +1,6 @@
 import os
+import requests
+import pickle
 from datetime import datetime
 from werkzeug.utils import secure_filename as secure
 
@@ -82,3 +84,32 @@ def edit_user(dba, requisicao, email):
     descricao = requisicao.form['descricao']
     dba.update_users(nome, sobrenome, fb, insta, github, linkedin, pesquisa,
                      descricao, email)
+
+
+def mail(requisicao):
+    credentials = pickle.load(open('mailgun.pkl', 'rb'))
+    MAILGUN_DOMAIN_NAME = credentials['nome']
+    MAILGUN_API_KEY = credentials['key']
+
+    nome = requisicao.form['nome'] if requisicao.form['nome'] else 'Anônimo'
+    email = requisicao.form['email'] if requisicao.form['email'] else 'Anônimo'
+    msg = requisicao.form['msg']
+
+    corpo = "Mensagem enviada por {}.\n".format(nome)
+    corpo += "E-mail: {}\n\n".format(email)
+    corpo += "Mensagem:\n{}\n".format(msg)
+
+    assunto = "Contato - The Science's on the Table ({})".format(nome)
+
+    url = 'https://api.mailgun.net/v3/{}/messages'
+    url = url.format(MAILGUN_DOMAIN_NAME)
+    auth = ('api', MAILGUN_API_KEY)
+    dados = {
+        'from': 'Mailgun User <postmaster@{}>'.format(MAILGUN_DOMAIN_NAME),
+        'to': ['marcos.sombraaa@gmail.com'],
+        'subject': assunto,
+        'text': corpo
+    }
+
+    response = requests.post(url, auth=auth, data=dados)
+    response.raise_for_status()
