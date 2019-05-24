@@ -1,12 +1,12 @@
 import psycopg2
-import pickle
+import os
 from argon2 import PasswordHasher
 from functions import gerar_url
 
 
 class Database:
     def __init__(self):
-        comando = pickle.load(open('loginbd.pkl', 'rb'))
+        comando = os.environ['DATABASE_URL']
 
         self.conn = psycopg2.connect(comando, sslmode='require')
         self.cur = self.conn.cursor()
@@ -180,9 +180,9 @@ class Database_access:
         ph = PasswordHasher()
         try:
             ph.verify(senha_user, senha)
-            return 1
+            return True
         except Exception:
-            return 0
+            return False
 
     def delete_post(self, email, senha, url):
         r = self.auth_user(email, senha)

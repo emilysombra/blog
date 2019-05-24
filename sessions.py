@@ -4,6 +4,7 @@ from flask.sessions import SessionInterface, SessionMixin
 from uuid import uuid4
 from datetime import timedelta
 import pickle
+import os
 
 
 class RedisSession(CallbackDict, SessionMixin):
@@ -22,8 +23,7 @@ class RedisSessionInterface(SessionInterface):
 
     def __init__(self, redis=None, prefix='session:'):
         if redis is None:
-            redis_url = pickle.load(open('redis_url.pkl', 'rb'))
-            redis = from_url(redis_url)
+            redis = from_url(os.environ['REDISTOGO_URL'])
         self.redis = redis
         self.prefix = prefix
 

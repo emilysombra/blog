@@ -1,6 +1,5 @@
 import os
 import requests
-import pickle
 from datetime import datetime
 from werkzeug.utils import secure_filename as secure
 
@@ -87,9 +86,8 @@ def edit_user(dba, requisicao, email):
 
 
 def mail(requisicao):
-    credentials = pickle.load(open('mailgun.pkl', 'rb'))
-    MAILGUN_DOMAIN_NAME = credentials['nome']
-    MAILGUN_API_KEY = credentials['key']
+    MAILGUN_DOMAIN = os.environ['MAILGUN_DOMAIN']
+    MAILGUN_API_KEY = os.environ['MAILGUN_API_KEY']
 
     nome = requisicao.form['nome'] if requisicao.form['nome'] else 'Anônimo'
     email = requisicao.form['email'] if requisicao.form['email'] else 'Anônimo'
@@ -102,10 +100,10 @@ def mail(requisicao):
     assunto = "Contato - The Science's on the Table ({})".format(nome)
 
     url = 'https://api.mailgun.net/v3/{}/messages'
-    url = url.format(MAILGUN_DOMAIN_NAME)
+    url = url.format(MAILGUN_DOMAIN)
     auth = ('api', MAILGUN_API_KEY)
     dados = {
-        'from': 'Mailgun User <postmaster@{}>'.format(MAILGUN_DOMAIN_NAME),
+        'from': 'Mailgun User <postmaster@{}>'.format(MAILGUN_DOMAIN),
         'to': ['marcos.sombraaa@gmail.com'],
         'subject': assunto,
         'text': corpo

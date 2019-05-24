@@ -195,8 +195,7 @@ def adm_login():
 
     if(request.method == 'POST'):
         session.pop('user', None)
-        r = dba.auth_user(request.form['email'], request.form['senha'])
-        if(r):
+        if(dba.auth_user(request.form['email'], request.form['senha'])):
             session.permanent = True
             session['user'] = request.form['email']
             return redirect(url_for('adm_index'))
