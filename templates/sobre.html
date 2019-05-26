@@ -1,6 +1,6 @@
 {% include "includes/head.html" %}
 
-    <title>The Science's on the Table - Sobre</title>
+    <title>{{ g.brand }} - Sobre</title>
 </head>
 
 <body>
@@ -18,40 +18,8 @@
             <!-- sobre os autores -->
             <section class="team-section my-5">
                 <h2 class="h1-responsive font-weight-bold text-center my-5">Nossa Equipe</h2>
-                <p class="grey-text text-center w-responsive mx-auto mb-5">Estes são os criadores e autores do blog:</p> 
 
-                <!-- exibir autores em linha -->
-                <div class="row text-center text-md-left">
-                    {% for usuario in usuarios %}
-                    {% set foto = "/static/{}".format(usuario[9]) %}
-                    {% set nome = usuario[1] + ' ' + usuario[2] %}
-                    <div class="col-xl-6 col-lg-12 mb-5 d-md-flex justify-content-between">
-                        <!-- foto -->
-                        <div class="avatar mb-md-0 mb-4 mx-4">
-                            <img src="{{foto}}" class="img-fluid rounded z-depth-1" alt="{{ nome }}" title="{{ nome }}">
-                        </div>
-                        <!-- descrição -->
-                        <div class="mx-4">
-                            <h4 class="font-weight-bold mb-3">{{ nome }}</h4>
-                            <h6 class="font-weight-bold grey-text mb-3">{{ usuario[8] }}</h6>
-                            <p class="grey-text">{{ usuario[7] }}</p>
-                            <!-- redes sociais -->
-                            <a class="fa-lg fb-ic" href="{{ usuario[3] }}" target="_blank" style="color: #133d06;">
-                                <i class="fab fa-facebook"></i>
-                            </a>
-                            <a class="fa-lg ins-ic" href="{{ usuario[4] }}" target="_blank" style="color: #133d06;">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                            <a class="fa-lg git-ic" href="{{ usuario[5] }}" target="_blank" style="color: #133d06;">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            <a class="fa-lg li-ic" href="{{ usuario[6] }}" target="_blank" style="color: #133d06;">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div> 
+                {% include "includes/mostrar-usuarios.html" %}
             </section>
         </div>
     </div>

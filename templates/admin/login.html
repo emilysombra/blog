@@ -1,5 +1,5 @@
 {% include "includes/head.html" %}
-    <title>The Science's on the Table - Login</title>
+    <title>{{ g.brand }} - Login</title>
 </head>
 
 <!-- corpo do site -->
@@ -12,7 +12,7 @@
         <label for="inputPassword" class="sr-only">Senha</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Senha" name="senha" required>
         <button class="btn btn-lg btn-success btn-block" type="submit">Entrar</button>
-        <p class="mt-5 mb-3 text-muted"><span id="copyright">© 2019 Copyright: The Science's on the Table</span></p>
+        <p class="mt-5 mb-3 text-muted"><span id="copyright">© 2019 Copyright: {{ g.brand }}</span></p>
     </form>
     <!-- js do ano -->
     <script type="text/javascript" src="{{url_for('.static', filename='js/copyright.js')}}"></script>

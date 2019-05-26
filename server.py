@@ -75,8 +75,8 @@ def ver_post(url_post):
 
 @app.route('/sobre/')
 def sobre():
-    usuarios = dba.select_users()
-    return render_template('sobre.html', usuarios=usuarios)
+    autores = dba.select_users()
+    return render_template('sobre.html', autores=autores)
 
 
 @app.route('/contato/', methods=['GET', 'POST'])
@@ -208,6 +208,7 @@ def adm_login():
 @app.before_request
 def before_request():
     g.ads = dba.select_ads()
+    g.brand = 'Science on the Table'
     g.user = None
     if('user' in session):
         g.user = session['user']
