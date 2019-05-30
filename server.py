@@ -123,16 +123,15 @@ def adm_novo_post():
         return redirect(url_for('adm_login'))
 
     autor = dba.select_users(email=g.user, max_results=1)
-    nome = autor[1] + ' ' + autor[2]
 
     if(request.method == 'POST'):
         r = novo_post(dba, request)
         if(r == -1):
             return render_template('admin/novo-post.html', msg=2)
 
-        return render_template('admin/novo-post.html', msg=1, autor=nome)
+        return render_template('admin/novo-post.html', msg=1, autor=autor)
     else:
-        return render_template('admin/novo-post.html', msg=0, autor=nome)
+        return render_template('admin/novo-post.html', msg=0, autor=autor)
 
 
 @app.route('/usuarios/editar/', methods=['POST', 'GET'])

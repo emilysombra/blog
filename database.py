@@ -2,6 +2,7 @@ import psycopg2
 import os
 from argon2 import PasswordHasher
 from functions import gerar_url
+from user import cria_usuario
 
 
 class Database:
@@ -54,7 +55,7 @@ class Database_access:
         self.db.cur.execute(q)
         # limita os resultados e retorna
         if(max_results == 1):
-            return self.db.cur.fetchall()[0]
+            return cria_usuario(self.db.cur.fetchall()[0])
         elif(max_results > 1):
             return self.db.cur.fetchall()[:max_results]
         else:
@@ -176,10 +177,10 @@ class Database_access:
         self.db.conn.commit()
 
     def auth_user(self, email, senha):
-        senha_user = self.select_users(email=email, max_results=1)[11]
+        user = self.select_users(email=email, max_results=1)
         ph = PasswordHasher()
         try:
-            ph.verify(senha_user, senha)
+            ph.verify(user.senha, senha)
             return True
         except Exception:
             return False
