@@ -56,10 +56,17 @@ class Database_access:
         # limita os resultados e retorna
         if(max_results == 1):
             return cria_usuario(self.db.cur.fetchall()[0])
-        elif(max_results > 1):
-            return self.db.cur.fetchall()[:max_results]
+
+        users = self.db.cur.fetchall()
+        new = []
+        if(max_results > 1):
+            for user in users[:max_results]:
+                new.append(cria_usuario(user))
         else:
-            return self.db.cur.fetchall()
+            for user in users:
+                new.append(cria_usuario(user))
+
+        return new
 
     def select_posts(self, active_only=True, ultimos=0, busca=None, url=None,
                      populares=False):

@@ -9,36 +9,35 @@
                 <!-- lista de autores -->
                 <!-- autor #1 -->
                 {% for autor in autores %}
-                {% set foto = "/static/{}".format(autor[9]) %}
-                {% set nome = autor[1] + " " + autor[2] %}
+                {% set foto = "/static/{}".format(autor.diretorio_foto) %}
                 <div class="row">
                     <!-- div da imagem -->
                     <div class="col-lg-5 col-xl-4">
                         <div class="view overlay rounded z-depth-1-half mb-lg-0 mb-4">
-                            <img class="img-fluid" src="{{ foto }}" alt="{{ nome }}" title="{{ nome }}">
+                            <img class="img-fluid" src="{{ foto }}" alt="{{ autor.nome_completo }}" title="{{ autor.nome_completo }}">
                         </div>
                     </div>
                     <!-- fim div da imagem -->
 
                     <!-- div do texto -->
                     <div class="col-lg-7 col-xl-8">
-                        <h3 class="font-weight-bold mb-3">{{ nome }}</h3>
-                        <p class="dark-grey-text">{{ autor[7] }}</p>
-                        <a class="fa-lg fb-ic" href="{{ autor[3] }}" target="_blank" style="color: #133d06;">
+                        <h3 class="font-weight-bold mb-3">{{ autor.nome_completo }}</h3>
+                        <p class="dark-grey-text">{{ autor.descricao }}</p>
+                        <a class="fa-lg fb-ic" href="{{ autor.facebook }}" target="_blank" style="color: #133d06;">
                             <i class="fab fa-facebook"></i>
                         </a>
-                        <a class="fa-lg ins-ic" href="{{ autor[4] }}" target="_blank" style="color: #133d06;">
+                        <a class="fa-lg ins-ic" href="{{ autor.instagram }}" target="_blank" style="color: #133d06;">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a class="fa-lg git-ic" href="{{ autor[5] }}" target="_blank" style="color: #133d06;">
+                        <a class="fa-lg git-ic" href="{{ autor.github }}" target="_blank" style="color: #133d06;">
                             <i class="fab fa-github"></i>
                         </a>
-                        <a class="fa-lg li-ic" href="{{ autor[6] }}" target="_blank" style="color: #133d06;">
+                        <a class="fa-lg li-ic" href="{{ autor.linkedin }}" target="_blank" style="color: #133d06;">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
                         <br>
                         <br>
-                        {% if g.user == autor[10] %}
+                        {% if g.user == autor.email %}
                         <a class="btn btn-info" style="color:white;" href="/usuarios/editar/" role="button">Editar Perfil</a>
                         {% endif %}
                     </div>
