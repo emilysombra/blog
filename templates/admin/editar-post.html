@@ -1,5 +1,5 @@
 {% include "includes/head.html" %}
-    <title>{{ g.brand }} - Editar Post - {{ post[1] }}</title>
+    <title>{{ g.brand }} - Editar Post - {{ post.titulo }}</title>
     <!-- summernote css -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
 </head>
@@ -42,21 +42,21 @@
                     <!-- campo título-->
                     <div class="form-group">
                         <label for="titulo">Título do Post:</label>
-                        <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Título" value="{{ post[1] }}" required>
+                        <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Título" value="{{ post.titulo }}" required>
                     </div>
                     <!-- campo autor-->
                     <div class="form-group">
                         <label for="autor">Autor:</label>
-                        <input type="text" class="form-control" id="autor" name="autor" placeholder="{{ autor }}" value="{{ autor }}" required readonly>
+                        <input type="text" class="form-control" id="autor" name="autor" placeholder="{{ post.autor }}" value="{{ post.autor }}" required readonly>
                     </div>
                     <!-- campo post -->
                     <div class="form-group">
-                        <textarea class="form-control" type="textarea" name="texto" id="texto" placeholder="Conteúdo do Post" rows="7">{{ post[5] }}</textarea>
+                        <textarea class="form-control" type="textarea" name="texto" id="texto" placeholder="Conteúdo do Post" rows="7">{{ post.texto }}</textarea>
                         <span class="help-block">
                     </div>
                     <!-- campo ativo-->
                     <div class="form-check">
-                        {% if post[6] == 1 %}
+                        {% if post.ativo == 1 %}
                         <input class="form-check-input" checked type="checkbox" name="ativo" id="defaultCheck1">
                         {% else %}
                         <input class="form-check-input" type="checkbox" name="ativo" id="defaultCheck1">

@@ -1,23 +1,23 @@
                 {% for post in posts %}
-                {% set foto = "/static/{}".format(post[3]) %}
+                {% set foto = "/static/{}".format(post.imagem) %}
                 <div class="row">
                     <!-- div da imagem -->
                     <div class="col-lg-5 col-xl-4">
                         <div class="view overlay rounded z-depth-1-half mb-lg-0 mb-4">
-                            <img class="img-fluid" src="{{ foto }}" alt="{{ post[1] }}" title="{{ post[1] }}">
+                            <img class="img-fluid" src="{{ foto }}" alt="{{ post.titulo }}" title="{{ post.titulo }}">
                         </div>
                     </div>
                     <!-- fim div da imagem -->
 
                     <!-- div do texto -->
                     <div class="col-lg-7 col-xl-8">
-                        <h3 class="font-weight-bold mb-3">{{ post[1] }}</h3>
-                        {% if post[6] == 0 %}
+                        <h3 class="font-weight-bold mb-3">{{ post.titulo }}</h3>
+                        {% if post.ativo == 0 %}
                             <h4 class="font-weight-bold mb-3">[Post Oculto]</h4>
                         {% endif %}
-                        <p class="dark-grey-text" id="{{ loop.index }}">{{ post[5]|safe }}</p>
-                        <p>Publicado por: <a class="font-weight-bold">{{ post[4] }}</a>, {{ post[2] }}</p>
-                        <a class="btn btn-success" href="/posts/ver-post/{{ post[7] }}" style="color:white;" role="button">Ver Mais</a>
+                        <p class="dark-grey-text" id="{{ loop.index }}">{{ post.texto|safe }}</p>
+                        <p>Publicado por: <a class="font-weight-bold">{{ post.autor }}</a>, {{ post.data }}</p>
+                        <a class="btn btn-success" href="/posts/ver-post/{{ post.url }}" style="color:white;" role="button">Ver Mais</a>
                         {% include "includes/botoes-admin-only.html" %}
                     </div>
                     <!-- fim div do texto -->

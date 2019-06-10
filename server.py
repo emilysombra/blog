@@ -1,5 +1,5 @@
 from flask import (Flask, render_template, request, session, redirect,
-                   url_for, g)
+                   url_for, g, abort)
 from datetime import timedelta
 from pagination import Pagination
 from database import Database_access, Database
@@ -58,7 +58,7 @@ def posts(pag):
 @app.route('/posts/ver-post/<url_post>/', methods=['GET'])
 def ver_post(url_post):
     if(not url_post):
-        return redirect(url_for('posts'))
+        return abort(404)
 
     post = dba.select_posts(url=url_post.lower())
     populares = dba.select_posts(populares=True)
@@ -66,7 +66,7 @@ def ver_post(url_post):
 
     if(len(post) > 0):
         post = post[0]
-        autor = dba.select_users(nome=post[4].split()[0], max_results=1)
+        autor = dba.select_users(nome=post.autor.split()[0], max_results=1)
         return render_template('ver-post.html', post=post, autor=autor,
                                populares=populares)
     else:
@@ -102,10 +102,10 @@ def adm_index():
 
 
 @app.route('/posts/excluir-post/', defaults={'url_post': None})
-@app.route('/posts/excluir-post/<url_post>/', methods=['POST'])
+@app.route('/posts/excluir-post/<url_post>/', methods=['POST', 'GET'])
 def adm_excluir_post(url_post):
     if((not g.user) or (not url_post)):
-        return redirect(url_for('posts'))
+        return abort(404)
 
     if(request.method == 'POST'):
         r = dba.delete_post(g.user, request.form['senha'], url_post)
@@ -114,13 +114,13 @@ def adm_excluir_post(url_post):
 
         return redirect('/posts/ver-post/{}/'.format(url_post))
     else:
-        return redirect(url_for('posts'))
+        return abort(404)
 
 
 @app.route('/admin/novo-post/', methods=['POST', 'GET'])
 def adm_novo_post():
     if(not g.user):
-        return redirect(url_for('adm_login'))
+        return abort(404)
 
     autor = dba.select_users(email=g.user, max_results=1)
 
@@ -137,7 +137,7 @@ def adm_novo_post():
 @app.route('/usuarios/editar/', methods=['POST', 'GET'])
 def adm_editar_usuario():
     if(not g.user):
-        return redirect(url_for('index'))
+        return abort(404)
 
     user = dba.select_users(email=g.user, max_results=1)
 
@@ -152,7 +152,7 @@ def adm_editar_usuario():
 @app.route('/posts/editar-post/<url_post>/', methods=['POST', 'GET'])
 def adm_editar_post(url_post):
     if((not g.user) or (not url_post)):
-        return redirect(url_for('posts'))
+        return abort(404)
 
     post = dba.select_posts(url=url_post.lower())
     if(request.method == 'POST'):
@@ -162,12 +162,12 @@ def adm_editar_post(url_post):
 
         post = dba.select_posts(url=url_post.lower())
         return render_template('admin/editar-post.html', post=post[0],
-                               autor=post[0][4], msg=1)
+                               autor=post[0].autor, msg=1)
 
     else:
         if(len(post) > 0):
             return render_template('admin/editar-post.html', post=post[0],
-                                   autor=post[0][4])
+                                   autor=post[0].autor)
         else:
             return redirect(url_for('posts'))
 
@@ -178,7 +178,7 @@ def adm_usuarios():
         return render_template('admin/ver-usuarios.html',
                                autores=dba.select_users())
 
-    return redirect(url_for('adm_login'))
+    return abort(404)
 
 
 @app.route('/admin/logout/')
@@ -216,7 +216,7 @@ def before_request():
 # erros
 @app.errorhandler(404)
 def handle_not_found(e):
-    return render_template('error/404.html')
+    return render_template('error/404.html'), 404
 
 
 if __name__ == '__main__':

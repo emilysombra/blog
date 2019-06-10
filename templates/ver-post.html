@@ -8,23 +8,23 @@
 
 {% include "includes/chamada.html" %}
 
-{% set foto = "/static/{}".format(post[3]) %}
+{% set foto = "/static/{}".format(post.imagem) %}
 {% set img = "/static/{}".format(autor.diretorio_foto) %}
 
     <div class="jumbotron-fluid">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
-                    <h1>{{ post[1] }}</h1>
+                    <h1>{{ post.titulo }}</h1>
                     <p class="lead">
-                        <i class="fa fa-user"></i> {{ post[4] }}
+                        <i class="fa fa-user"></i> {{ post.autor }}
                     </p>
-                    <p><i class="fa fa-calendar"></i> Publicado em {{ post[2]}}</p>
-                    <img class="img-fluid" src="{{ foto }}" alt="{{ post[1] }}" title="{{ post[1] }}">
+                    <p><i class="fa fa-calendar"></i> Publicado em {{ post.data }}</p>
+                    <img class="img-fluid" src="{{ foto }}" alt="{{ post.titulo }}" title="{{ post.titulo }}">
 
                     <hr>
                     
-                    <p class="dark-grey-text">{{ post[5]|safe }}</p>
+                    <p class="dark-grey-text">{{ post.texto|safe }}</p>
                     
                     <hr>
                     <div class="container portfolio" style="margin-bottom: 10px;">
@@ -34,14 +34,14 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="bio-image" style="text-align:center;">
-                                                <img width="200px" src="{{ img }}" class="img-fluid rounded-circle z-depth-1" alt="{{ post[4] }}" title="{{ post[4] }}">
+                                                <img width="200px" src="{{ img }}" class="img-fluid rounded-circle z-depth-1" alt="{{ autor.nome_completo }}" title="{{ autor.nome_completo }}">
                                             </div>          
                                         </div>
                                     </div>  
                                 </div>
                                 <div class="col-md-6">
                                     <div class="bio-content">
-                                        <h4>{{ post[4] }}</h4>
+                                        <h4>{{ autor.nome_completo }}</h4>
                                         <h6>{{ autor.pesquisa }}</h6>
                                         <p>{{ autor.descricao }}</p>
                                         <!-- redes sociais -->
@@ -106,9 +106,9 @@
                         <h4><i class="fa fa-tags"></i> Posts mais populares </h4>
                         <ul class="list-unstyled">
                             {% for post in populares %}
-                            {% set url = "/posts/ver-post/{}".format(post[7]) %}
+                            {% set url = "/posts/ver-post/{}".format(post.url) %}
                             <li>
-                                <a href="{{ url }}" target="_blank" class="badge badge-success">{{ post[1]}}</a>
+                                <a href="{{ url }}" target="_blank" class="badge badge-success">{{ post.titulo }}</a>
                             </li>
                             {% endfor %}
                         </ul>

@@ -43,7 +43,7 @@ def edit_post(dba, requisicao, post):
     autor = requisicao.form['autor']
     texto = requisicao.form['texto']
     ativo = len(requisicao.form.getlist('ativo'))
-    dba.update_post(post[0][0], titulo, autor, texto, ativo)
+    dba.update_post(post[0].id, titulo, autor, texto, ativo)
     return 1
 
 

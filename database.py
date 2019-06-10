@@ -3,6 +3,7 @@ import os
 from argon2 import PasswordHasher
 from functions import gerar_url
 from user import cria_usuario
+from post import cria_post
 
 
 class Database:
@@ -122,7 +123,12 @@ class Database_access:
 
         # realiza a busca e retorna
         self.db.cur.execute(q)
-        return self.db.cur.fetchall()
+        posts = self.db.cur.fetchall()
+        new = []
+        for post in posts:
+            new.append(cria_post(post))
+
+        return new
 
     def insert_post(self, titulo, autor, data, img, texto, ativo):
         '''
@@ -134,7 +140,7 @@ class Database_access:
         url = gerar_url(self, titulo, autor)
         # busca o id do autor do post
         autor = autor.split()
-        autor = self.select_users(nome=autor[0], sobrenome=autor[1])[0][0]
+        autor = self.select_users(nome=autor[0], sobrenome=autor[1])[0].id
         # query para inserir o post
         q = "INSERT INTO posts (titulo, autor, data, imagem, texto, ativo, " \
             "url) VALUES ('{}', {}, '{}', '{}', '{}', {}, '{}');"
@@ -159,7 +165,7 @@ class Database_access:
         '''
         # busca o id do autor do post
         autor = autor.split()
-        autor = self.select_users(nome=autor[0], sobrenome=autor[1])[0][0]
+        autor = self.select_users(nome=autor[0], sobrenome=autor[1])[0].id
         # query para editar o post
         q = "UPDATE posts SET titulo='{}', autor={}, texto='{}', ativo={} " \
             "WHERE id={};".format(titulo, autor, texto, ativo, id_post)

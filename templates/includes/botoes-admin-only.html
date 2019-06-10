@@ -1,5 +1,5 @@
                         {% if g.user %}
-                        <a class="btn btn-info" href="/posts/editar-post/{{ post[7] }}/" style="color:white;" role="button">Editar</a>
+                        <a class="btn btn-info" href="/posts/editar-post/{{ post.url }}/" style="color:white;" role="button">Editar</a>
                         <button type="button" data-toggle="modal" id="modal-button" data-target="#password-modal" class="btn btn-danger" style="color:white;" role="button">Excluir</button>
 
                         <div class="modal fade" id="password-modal" aria-labelledby="password-modal" aria-hidden="true" tabindex="-1" role="dialog">
@@ -12,7 +12,7 @@
                                         </button>
                                     </div>
                                     
-                                    <form method="post" action="/posts/excluir-post/{{ post[7] }}/">
+                                    <form method="post" action="/posts/excluir-post/{{ post.url }}/">
                                         <div class="modal-body">
                                             <div class="form-group">
                                                 <label for="senha" class="col-form-label">Digite sua senha para confirmar:</label>
