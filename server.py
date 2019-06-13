@@ -62,7 +62,7 @@ def ver_post(url_post):
 
     post = dba.select_posts(url=url_post.lower())
     populares = dba.select_posts(populares=True)
-    dba.insert_visita(url_post)
+    dba.insert_visita(request.remote_addr, url_post)
 
     if(len(post) > 0):
         post = post[0]

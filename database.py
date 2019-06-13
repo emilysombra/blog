@@ -1,5 +1,6 @@
 import psycopg2
 import os
+from datetime import datetime
 from argon2 import PasswordHasher
 from functions import gerar_url
 from user import cria_usuario
@@ -149,12 +150,17 @@ class Database_access:
         self.db.cur.execute(q)
         self.db.conn.commit()
 
-    def insert_visita(self, url):
+    def insert_visita(self, ip, url):
         '''
-        Incrementa o contador de visitas de um post
+        Registra uma visita nova
         '''
-        q = "UPDATE posts SET visitas = visitas + 1 WHERE url='{}';"
-        q = q.format(url)
+        # não registra caso seja executado localmente
+        if(ip == '127.0.0.1'):
+            return
+
+        hj = datetime.now().strftime('%Y-%m-%d')
+        q = "INSERT INTO visitas (ip_user, data, url_post) " \
+            "VALUES ('{}', '{}', '{}');".format(ip, hj, url)
         self.db.cur.execute(q)
         self.db.conn.commit()
 
