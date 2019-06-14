@@ -82,19 +82,30 @@ class Database_access:
         populares: busca os posts mais visitados
         '''
 
-        # query de busca
-        q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
-            "CONCAT(nome, ' ', sobrenome), texto, ativo, url FROM posts as p" \
-            " INNER JOIN usuarios as u ON p.autor=u.id {}ORDER BY {} desc"
-
-        # caso populares seja true, seta variaveis e ordena por visitas
+        # caso populares seja true, utiliza uma estrutura diferente
         if(populares):
-            active_only = True
-            ultimos = 5
-            q = q.format('{}', 'visitas')
-        # caso populares seja false, ordena por id
-        else:
-            q = q.format('{}', 'p.id')
+            q = "SELECT post_id, titulo, data, imagem, CONCAT(nome, ' ', " \
+                "sobrenome), texto, ativo, url, autor, count FROM usuarios " \
+                "as u INNER JOIN (select p.id AS post_id, p.titulo, " \
+                "TO_CHAR(p.data, 'DD/MM/YYYY') as data, p.imagem, p.autor, " \
+                "p.texto, p.ativo, p.url, count from posts as p inner join " \
+                "(select url, COUNT(url) from (select ip_user as ip, " \
+                "url_post as url from visitas group by ip, url) as q1 group " \
+                "by url) as q2 on p.url=q2.url) AS q3 on u.id=q3.autor " \
+                "where ativo=1 order by count desc;"
+
+            # realiza a busca e retorna
+            self.db.cur.execute(q)
+            posts = self.db.cur.fetchall()
+            new = []
+            for post in posts:
+                new.append(cria_post(post))
+
+            return new
+        # query de busca
+        q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY') AS d, imagem, " \
+            "CONCAT(nome, ' ', sobrenome), texto, ativo, url FROM posts as p" \
+            " INNER JOIN usuarios as u ON p.autor=u.id {}ORDER BY d desc"
 
         # configura a seleção de posts ativos ou não
         if(active_only):

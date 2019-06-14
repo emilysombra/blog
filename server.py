@@ -62,9 +62,8 @@ def ver_post(url_post):
 
     post = dba.select_posts(url=url_post.lower())
     populares = dba.select_posts(populares=True)
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
     dba.insert_visita(ip, url_post)
-    print(ip)
 
     if(len(post) > 0):
         post = post[0]
