@@ -5,6 +5,7 @@ from argon2 import PasswordHasher
 from functions import gerar_url
 from user import cria_usuario
 from post import cria_post
+from ad import cria_ad
 
 
 class Database:
@@ -28,7 +29,12 @@ class Database_access:
         Retorna a tabela de anúncios
         '''
         self.db.cur.execute("SELECT * FROM ads;")
-        return self.db.cur.fetchall()
+        ads = self.db.cur.fetchall()
+        new = []
+        for ad in ads:
+            new.append(cria_ad(ad))
+
+        return new
 
     def select_users(self, nome=None, sobrenome=None, email=None,
                      max_results=0):

@@ -205,6 +205,11 @@ def adm_login():
         return render_template('/admin/login.html')
 
 
+@app.route('/admin/ads')
+def adm_ads():
+    return str(dba.select_ads()[0].link)
+
+
 @app.before_request
 def before_request():
     g.ads = dba.select_ads()
