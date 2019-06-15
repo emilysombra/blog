@@ -1,0 +1,62 @@
+{% include "includes/head.html" %}
+    <title> {{ g.brand }} - Lista de Anúncios</title>
+</head>
+
+<!-- corpo do site -- >
+<body>
+    <!-- menu superior (fixado) -->
+{% include "includes/menu.html" %}
+    <!-- fim do menu superior (fixado) -->
+
+
+
+    <!-- inicio div de chamada do site -->
+{% include "admin/includes/chamada.html" %}
+    <!-- fim div de chamada do site -->
+
+
+    <!-- (new) inicio div de corpo do site -->
+    <div class="jumbotron-fluid">
+        <div class="container">
+            <section class="my-5">
+                <h2 class="h1-responsive font-weight-bold text-center my-5">Lista de Anúncios</h2>
+
+                {% if ads == [] %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    Nenhum anúncio encontrado!
+                </div>
+                {% endif %}
+                <!-- lista de anúncios -->
+                {% for ad in g.ads %}
+                {% set foto = "/static/img/ads/{}".format(ad.diretorio_foto) %}
+                <div class="row">
+                    <!-- div da imagem -->
+                    <div class="col-lg-5 col-xl-4">
+                        <div class="view overlay rounded z-depth-1-half mb-lg-0 mb-4">
+                            <img class="img-fluid" src="{{ foto }}" alt="{{ ad.titulo }}" title="{{ ad.titulo }}">
+                        </div>
+                    </div>
+                    <!-- fim div da imagem -->
+
+                    <!-- div do texto -->
+                    <div class="col-lg-7 col-xl-8">
+                        <h2 class="font-weight-bold mb-3">{{ ad.titulo }}</h2>
+                        <a class="btn btn-success" href="{{ ad.link }}" target="_blank" style="color:white;" role="button">Acessar</a>
+                    </div>
+                    <!-- fim div do texto -->
+                </div>
+
+                <hr class="my-5">
+                {% endfor %}
+                <!-- fim da lista de anúncios-->
+            </section>
+        </div>
+    </div>
+    <!-- (new) fim div de corpo do site -->
+
+
+    <!-- rodapé do site -->
+{% include "includes/rodape.html" %}

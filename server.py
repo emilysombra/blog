@@ -205,9 +205,26 @@ def adm_login():
         return render_template('/admin/login.html')
 
 
-@app.route('/admin/ads')
+@app.route('/admin/ads/')
 def adm_ads():
-    return str(dba.select_ads()[0].link)
+    if(not g.user):
+        return abort(404)
+    return render_template('/admin/ads.html')
+
+
+@app.route('/admin/novo-ad/', methods=['POST', 'GET'])
+def adm_novo_ad():
+    if(not g.user):
+        return abort(404)
+
+    if(request.method == 'POST'):
+        r = 1
+        if(r == -1):
+            return render_template('admin/novo-ad.html', msg=2)
+
+        return render_template('admin/novo-ad.html', msg=1)
+    else:
+        return render_template('/admin/novo-ad.html')
 
 
 @app.before_request

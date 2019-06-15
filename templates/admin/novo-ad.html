@@ -1,0 +1,75 @@
+{% include "includes/head.html" %}
+    <title>{{ g.brand }} - Novo Anúncio</title>
+</head>
+
+<!-- corpo do site -- >
+<body>
+    <!-- menu superior (fixado) -->
+{% include "includes/menu.html" %}
+    <!-- fim do menu superior (fixado) -->
+
+
+
+    <!-- inicio div de chamada do site -->
+{% include "admin/includes/chamada.html" %}
+    <!-- fim div de chamada do site -->
+
+
+    <!-- (new) inicio div de corpo do site -->
+    <div class="jumbotron-fluid">
+        <div class="container">
+            <!-- form de post novo -->
+            <div class="form-area">
+                <form role="form" method="post" enctype="multipart/form-data">
+                    <h2 class="h1-responsive font-weight-bold text-center my-5">Novo Anúncio</h2>
+                    {% if msg == 1 %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        Anúncio cadastrado com sucesso!
+                    </div>
+                    {% elif msg == 2%}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        Formato de arquivo não suportado! Formatos aceitos: .jpg, .jpeg e .png
+                    </div>
+                    {% endif %}
+                    <!-- campo título-->
+                    <div class="form-group">
+                        <label for="titulo">Título do Anúncio:</label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Título" required>
+                    </div>
+                    <!-- campo link-->
+                    <div class="form-group">
+                        <label for="link">Link do Anúncio:</label>
+                        <input type="text" class="form-control" id="link" name="link" placeholder="Link" required>
+                    </div>
+                    <!-- campo imagem-->
+                    <div class="form-group">
+                        <label for="img">Imagem:</label>
+                        <input type="file" class="form-control-file" id="img" name="img" required>
+                    </div>
+                    <!-- botão de envio -->
+                    <button type="submit" id="enviar" name="enviar" class="btn btn-success pull-right">Enviar</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- (new) fim div de corpo do site -->
+
+
+    <!-- rodapé do site -->
+{% include "includes/rodape.html" %}
+<!-- summernote js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
+<script>
+    $('#texto').summernote({
+        placeholder: 'Conteúdo do Post',
+        tabsize: 4,
+        height: 150
+    });
+</script>

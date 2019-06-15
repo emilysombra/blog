@@ -119,9 +119,9 @@
                     <div class="well">
                         <h4><i class="fas fa-ad"></i> Apoio:</h4>
                         {% for ad in g.ads %}
-                        {% set foto = "/static/img/ads/{}".format(ad[2]) %}
-                        <a href="{{ ad[3] }}" target="_blank">
-                            <img src="{{ foto }}" class="img-fluid" alt="{{ ad[1] }}" title="{{ ad[1] }}" style="margin-bottom: 10px;">
+                        {% set foto = "/static/img/ads/{}".format(ad.diretorio_foto) %}
+                        <a href="{{ ad.link }}" target="_blank">
+                            <img src="{{ foto }}" class="img-fluid" alt="{{ ad.titulo }}" title="{{ ad.titulo }}" style="margin-bottom: 10px;">
                         </a>
 
                         {% endfor %}
