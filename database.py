@@ -109,9 +109,9 @@ class Database_access:
 
             return new
         # query de busca
-        q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY') AS d, imagem, " \
+        q = "SELECT p.id, titulo, TO_CHAR(data, 'DD/MM/YYYY'), imagem, " \
             "CONCAT(nome, ' ', sobrenome), texto, ativo, url FROM posts as p" \
-            " INNER JOIN usuarios as u ON p.autor=u.id {}ORDER BY d desc"
+            " INNER JOIN usuarios as u ON p.autor=u.id {}ORDER BY data desc"
 
         # configura a seleção de posts ativos ou não
         if(active_only):
