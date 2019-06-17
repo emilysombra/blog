@@ -8,6 +8,7 @@ from sessions import RedisSessionInterface
 import os
 import json
 import boto3 as b3
+from botocore.client import Config
 
 PER_PAGE = 10
 db = Database()
@@ -231,20 +232,20 @@ def adm_novo_ad():
 
 @app.route('/sign_s3/')
 def sign_s3():
-    BUCKET = os.environ.get('SCIENCE_BUCKET')
+    bucket = os.environ.get('SCIENCE_BUCKET')
 
     file_name = request.args.get('file_name')
     file_type = request.args.get('file_type')
 
-    s3 = b3.client('s3')
-    post = s3.generate_presigned_post(Bucket=BUCKET, Key=file_name,
+    s3 = b3.client('s3', config=Config(signature_version='s3v4'))
+    post = s3.generate_presigned_post(Bucket=bucket, Key=file_name,
                                       Fields={"acl": "public-read",
                                               "Content-Type": file_type},
                                       Conditions=[{"acl": "public-read"},
                                                   {"Content-Type": file_type}],
                                       ExpiresIn=3600)
 
-    url = 'https://%s.s3.amazonaws.com/%s' % (BUCKET, file_name)
+    url = 'https://{{}}.s3.amazonaws.com/{{}}'.format(bucket, file_name)
     return json.dumps({'data': post, 'url': url})
 
 
