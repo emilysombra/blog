@@ -11,3 +11,4 @@ argon2==0.1.10
 argon2-cffi==18.3.0
 redis==3.0.1
 requests==2.19.1
+boto3==1.9.169

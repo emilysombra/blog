@@ -6,6 +6,8 @@ from database import Database_access, Database
 from functions import edit_post, novo_post, edit_user, get_posts_por_page, mail
 from sessions import RedisSessionInterface
 import os
+import json
+import boto3 as b3
 
 PER_PAGE = 10
 db = Database()
@@ -225,6 +227,25 @@ def adm_novo_ad():
         return render_template('admin/novo-ad.html', msg=1)
     else:
         return render_template('/admin/novo-ad.html')
+
+
+@app.route('/sign_s3/')
+def sign_s3():
+    BUCKET = os.environ.get('SCIENCE_BUCKET')
+
+    file_name = request.args.get('file_name')
+    file_type = request.args.get('file_type')
+
+    s3 = b3.client('s3')
+    post = s3.generate_presigned_post(Bucket=BUCKET, Key=file_name,
+                                      Fields={"acl": "public-read",
+                                              "Content-Type": file_type},
+                                      Conditions=[{"acl": "public-read"},
+                                                  {"Content-Type": file_type}],
+                                      ExpiresIn=3600)
+
+    url = 'https://%s.s3.amazonaws.com/%s' % (BUCKET, file_name)
+    return json.dumps({'data': post, 'url': url})
 
 
 @app.before_request
