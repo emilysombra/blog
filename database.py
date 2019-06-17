@@ -223,6 +223,7 @@ class Database_access:
 
     def delete_post(self, email, senha, url):
         r = self.auth_user(email, senha)
+        self.delete_visita(url)
         if(r):
             q = "DELETE FROM posts WHERE url='{}';".format(url)
             self.db.cur.execute(q)
