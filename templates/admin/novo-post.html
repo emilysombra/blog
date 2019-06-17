@@ -96,7 +96,8 @@
         getSignedRequest(file);
     };
 })();
-
+</script>
+<script>
 function getSignedRequest(file){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/sign_s3?file_name="+file.name+"&file_type="+file.type);
@@ -113,7 +114,8 @@ function getSignedRequest(file){
     };
     xhr.send();
 }
-
+</script>
+<script>
 function uploadFile(file, s3Data, url){
     var xhr = new XMLHttpRequest();
     xhr.open("POST", s3Data.url);
