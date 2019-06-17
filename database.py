@@ -230,3 +230,8 @@ class Database_access:
             return 1
         else:
             return 0
+
+    def delete_visita(self, url):
+        q = "DELETE FROM visitas WHERE url_post='{}';".format(url)
+        self.db.cur.execute(q)
+        self.db.conn.commit()
