@@ -20,6 +20,14 @@
                         <i class="fa fa-user"></i> {{ post.autor }}
                     </p>
                     <p><i class="fa fa-calendar"></i> Publicado em {{ post.data }}</p>
+                    {% if tags %}
+                    <p>
+                        <i class="fa fa-tags"></i> Tags:
+                        {% for tag in tags%}
+                        <span class="badge badge-success">{{ tag[1] }}</span>
+                        {% endfor %}
+                    </p>
+                    {% endif %}
                     <img class="img-fluid" src="{{ foto }}" alt="{{ post.titulo }}" title="{{ post.titulo }}">
 
                     <hr>

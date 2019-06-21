@@ -7,8 +7,8 @@ from functions import edit_post, novo_post, edit_user, get_posts_por_page, mail
 from sessions import RedisSessionInterface
 import os
 import json
-import boto3 as b3
-from botocore.client import Config
+# import boto3 as b3
+# from botocore.client import Config
 
 PER_PAGE = 10
 db = Database()
@@ -63,16 +63,18 @@ def ver_post(url_post):
     if(not url_post):
         return abort(404)
 
-    post = dba.select_posts(url=url_post.lower())
+    url_post = url_post.lower()
+    post = dba.select_posts(url=url_post)
     populares = dba.select_posts(populares=True)
     ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
     dba.insert_visita(ip, url_post)
+    tags = dba.select_tags(post=url_post)
 
     if(len(post) > 0):
         post = post[0]
         autor = dba.select_users(nome=post.autor.split()[0], max_results=1)
         return render_template('ver-post.html', post=post, autor=autor,
-                               populares=populares)
+                               populares=populares, tags=tags)
     else:
         return redirect(url_for('posts'))
 
@@ -150,6 +152,43 @@ def adm_editar_usuario():
         return redirect(url_for('adm_usuarios'))
     else:
         return render_template('admin/editar-usuario.html', user=user)
+
+
+@app.route('/posts/add-tags/', methods=['POST', 'GET'])
+def admin_add_tags():
+    if((not g.user) or (request.method == 'GET')):
+        return abort(404)
+
+    url = request.form['url_post']
+    dba.insert_tag_post(request.form['tag'], url)
+    return redirect('/posts/controle-tags/{}/'.format(url))
+
+
+@app.route('/posts/remove-tags/', methods=['POST', 'GET'])
+def admin_remove_tags():
+    if((not g.user) or (request.method == 'GET')):
+        return abort(404)
+
+    url = request.form['url_post']
+    dba.delete_tag_post(url, tag=request.form['tag'])
+    return redirect('/posts/controle-tags/{}/'.format(url))
+
+
+@app.route('/posts/controle-tags/', defaults={'url_post': None})
+@app.route('/posts/controle-tags/<url_post>/')
+def adm_controle_tags(url_post):
+    if((not g.user) or (not url_post)):
+        return abort(404)
+
+    url_post = url_post.lower()
+    post = dba.select_posts(url=url_post)
+    tags_inc = dba.select_tags(post=url_post)
+    tags_exc = dba.select_tags(post=url_post, inc=False)
+    if(len(post) > 0):
+        return render_template('admin/gerenciar-tags.html', post=post[0],
+                               tags_inc=tags_inc, tags_exc=tags_exc)
+
+    return abort(404)
 
 
 @app.route('/posts/editar-post/', defaults={'url_post': None})
@@ -232,12 +271,14 @@ def adm_novo_ad():
 
 @app.route('/sign_s3/')
 def sign_s3():
+    return abort(404)
     bucket = os.environ.get('SCIENCE_BUCKET')
 
     file_name = request.args.get('file_name')
     file_type = request.args.get('file_type')
 
-    s3 = b3.client('s3', config=Config(signature_version='s3v4'))
+    # s3 = b3.client('s3', config=Config(signature_version='s3v4'))
+    s3 = ''
     post = s3.generate_presigned_post(Bucket=bucket, Key=file_name,
                                       Fields={"acl": "public-read",
                                               "Content-Type": file_type},

@@ -1,0 +1,78 @@
+{% include "includes/head.html" %}
+    <title> {{ g.brand }} - Gerenciar Tags</title>
+</head>
+
+<!-- corpo do site -- >
+<body>
+    <!-- menu superior (fixado) -->
+{% include "includes/menu.html" %}
+    <!-- fim do menu superior (fixado) -->
+
+
+
+    <!-- inicio div de chamada do site -->
+{% include "admin/includes/chamada.html" %}
+    <!-- fim div de chamada do site -->
+
+
+    <!-- (new) inicio div de corpo do site -->
+    <div class="jumbotron-fluid">
+        <div class="container">
+            <section class="my-5">
+                <h2 class="h1-responsive font-weight-bold text-center my-5">Gerenciar tags</h2>
+                {% set foto = "/static/{}".format(post.imagem) %}
+                <div class="row">
+                    <!-- div da imagem -->
+                    <div class="col-lg-5 col-xl-4">
+                        <div class="view overlay rounded z-depth-1-half mb-lg-0 mb-4">
+                            <img class="img-fluid" src="{{ foto }}" alt="{{ post.titulo }}" title="{{ post.titulo }}">
+                        </div>
+                    </div>
+                    <!-- fim div da imagem -->
+
+                    <!-- div do texto -->
+                    <div class="col-lg-7 col-xl-8">
+                        <h3 class="font-weight-bold mb-3">{{ post.titulo }}</h3>
+                        <p class="dark-grey-text" id="texto">{{ post.texto|safe }}</p>
+                        <p>Publicado por: <a class="font-weight-bold">{{ post.autor }}</a>, {{ post.data }}</p>
+                    </div>
+                    <!-- fim div do texto -->
+                </div>
+
+                <div class="row" style="margin-top: 10px;">
+                    <ul class="list-inline">
+                        {% for tag in tags_exc %}
+                        <li class="list-inline-item">
+                            <form method="post" action="/posts/add-tags/">
+                                <input type="hidden" value="{{ tag[0] }}" name="tag">
+                                <input type="hidden" value="{{ post.url }}" name="url_post">
+                                <button type="submit" class="badge badge-success">{{ tag[1] }}</button>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="row" style="margin-top: 10px;">
+                    <ul class="list-inline">
+                        {% for tag in tags_inc %}
+                        <li class="list-inline-item">
+                            <form method="post" action="/posts/remove-tags/">
+                                <input type="hidden" value="{{ tag[0] }}" name="tag">
+                                <input type="hidden" value="{{ post.url }}" name="url_post">
+                                <button type="submit" class="badge badge-danger">{{ tag[1] }}</button>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <hr class="my-5">
+            </section>
+        </div>
+    </div>
+    <!-- (new) fim div de corpo do site -->
+
+
+    <!-- rodapé do site -->
+{% include "includes/rodape.html" %}

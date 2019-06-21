@@ -76,6 +76,21 @@ class Database_access:
 
         return new
 
+    def select_tags(self, post=None, inc=True):
+        q = "SELECT t.id, nome FROM tags AS t{};"
+        if(post):
+            q = q.format(" WHERE id {}IN (SELECT tag FROM post_tags "
+                         "WHERE post='{}')")
+            if(inc):
+                q = q.format("", post)
+            else:
+                q = q.format("NOT ", post)
+        else:
+            q = q.format('')
+
+        self.db.cur.execute(q)
+        return self.db.cur.fetchall()
+
     def select_posts(self, active_only=True, ultimos=0, busca=None, url=None,
                      populares=False):
         '''
@@ -147,6 +162,13 @@ class Database_access:
             new.append(cria_post(post))
 
         return new
+
+    def insert_tag_post(self, tag, url):
+        q = "INSERT INTO post_tags (tag, post) VALUES ({}, '{}')"
+        q = q.format(tag, url)
+        # executa a query
+        self.db.cur.execute(q)
+        self.db.conn.commit()
 
     def insert_post(self, titulo, autor, data, img, texto, ativo):
         '''
@@ -234,5 +256,14 @@ class Database_access:
 
     def delete_visita(self, url):
         q = "DELETE FROM visitas WHERE url_post='{}';".format(url)
+        self.db.cur.execute(q)
+        self.db.conn.commit()
+
+    def delete_tag_post(self, post, tag=None):
+        q = "DELETE FROM post_tags WHERE post='{}'{};".format(post, '{}')
+        if(tag):
+            q = q.format(' AND tag={}'.format(tag))
+        else:
+            q = q.format('')
         self.db.cur.execute(q)
         self.db.conn.commit()

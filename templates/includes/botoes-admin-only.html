@@ -1,5 +1,8 @@
                         {% if g.user %}
+                        <a class="btn btn-secondary" href="/posts/controle-tags/{{ post.url }}/" style="color:white;" role="button">Gerenciar Tags</a>
+
                         <a class="btn btn-info" href="/posts/editar-post/{{ post.url }}/" style="color:white;" role="button">Editar</a>
+
                         <button type="button" data-toggle="modal" id="modal-button" data-target="#password-modal" class="btn btn-danger" style="color:white;" role="button">Excluir</button>
 
                         <div class="modal fade" id="password-modal" aria-labelledby="password-modal" aria-hidden="true" tabindex="-1" role="dialog">
@@ -28,6 +31,4 @@
                                 </div>
                             </div>
                         </div>
-
-                        
                         {% endif %}
