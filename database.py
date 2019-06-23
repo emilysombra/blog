@@ -11,9 +11,25 @@ from ad import cria_ad
 class Database:
     def __init__(self):
         comando = os.environ['DATABASE_URL']
-
         self.conn = psycopg2.connect(comando, sslmode='require')
         self.cur = self.conn.cursor()
+
+    def run_query(self, q):
+        self.cur.execute(q)
+
+    def commit(self):
+        self.conn.commit()
+
+    def fetch(self):
+        return self.cur.fetchall()
+
+    def cud_query(self, q):
+        self.run_query(q)
+        self.commit()
+
+    def read_query(self, q):
+        self.run_query(q)
+        return self.fetch()
 
 
 class Database_access:
@@ -28,8 +44,7 @@ class Database_access:
         '''
         Retorna a tabela de anúncios
         '''
-        self.db.cur.execute("SELECT * FROM ads;")
-        ads = self.db.cur.fetchall()
+        ads = self.db.read_query("SELECT * FROM ads;")
         new = []
         for ad in ads:
             new.append(cria_ad(ad))
@@ -60,12 +75,12 @@ class Database_access:
         else:
             q = q.format('')
         # executa a busca
-        self.db.cur.execute(q)
+        self.db.run_query(q)
         # limita os resultados e retorna
         if(max_results == 1):
             return cria_usuario(self.db.cur.fetchall()[0])
 
-        users = self.db.cur.fetchall()
+        users = self.db.fetch()
         new = []
         if(max_results > 1):
             for user in users[:max_results]:
@@ -88,8 +103,7 @@ class Database_access:
         else:
             q = q.format('')
 
-        self.db.cur.execute(q)
-        return self.db.cur.fetchall()
+        return self. db.read_query(q)
 
     def select_posts(self, active_only=True, ultimos=0, busca=None, url=None,
                      populares=False):
@@ -116,8 +130,7 @@ class Database_access:
                 "where ativo=1 order by count desc;"
 
             # realiza a busca e retorna
-            self.db.cur.execute(q)
-            posts = self.db.cur.fetchall()
+            posts = self.db.read_query(q)
             new = []
             for post in posts:
                 new.append(cria_post(post))
@@ -155,8 +168,7 @@ class Database_access:
             q += ';'
 
         # realiza a busca e retorna
-        self.db.cur.execute(q)
-        posts = self.db.cur.fetchall()
+        posts = self.db.read_query(q)
         new = []
         for post in posts:
             new.append(cria_post(post))
@@ -167,8 +179,7 @@ class Database_access:
         q = "INSERT INTO post_tags (tag, post) VALUES ({}, '{}')"
         q = q.format(tag, url)
         # executa a query
-        self.db.cur.execute(q)
-        self.db.conn.commit()
+        self.db.cud_query(q)
 
     def insert_post(self, titulo, autor, data, img, texto, ativo):
         '''
@@ -186,8 +197,7 @@ class Database_access:
             "url) VALUES ('{}', {}, '{}', '{}', '{}', {}, '{}');"
         q = q.format(titulo, autor, data, img, texto, ativo, url)
         # executa a query
-        self.db.cur.execute(q)
-        self.db.conn.commit()
+        self.db.cud_query(q)
 
     def insert_visita(self, ip, url):
         '''
@@ -200,8 +210,7 @@ class Database_access:
         hj = datetime.now().strftime('%Y-%m-%d')
         q = "INSERT INTO visitas (ip_user, data, url_post) " \
             "VALUES ('{}', '{}', '{}');".format(ip, hj, url)
-        self.db.cur.execute(q)
-        self.db.conn.commit()
+        self.db.cud_query(q)
 
     def update_post(self, id_post, titulo, autor, texto, ativo):
         '''
@@ -215,8 +224,7 @@ class Database_access:
         q = "UPDATE posts SET titulo='{}', autor={}, texto='{}', ativo={} " \
             "WHERE id={};".format(titulo, autor, texto, ativo, id_post)
         # executa a query
-        self.db.cur.execute(q)
-        self.db.conn.commit()
+        self.db.cud_query(q)
 
     def update_users(self, nome, sobrenome, fb, insta, github, linkedin,
                      pesquisa, descricao, email):
@@ -231,8 +239,7 @@ class Database_access:
         q = q.format(nome, sobrenome, fb, insta, github, linkedin, pesquisa,
                      descricao, email)
         # executa a query
-        self.db.cur.execute(q)
-        self.db.conn.commit()
+        self.db.cud_query(q)
 
     def auth_user(self, email, senha):
         user = self.select_users(email=email, max_results=1)
@@ -245,19 +252,18 @@ class Database_access:
 
     def delete_post(self, email, senha, url):
         r = self.auth_user(email, senha)
-        self.delete_visita(url)
         if(r):
+            self.delete_visita(url)
+            self.delete_tag_post(url)
             q = "DELETE FROM posts WHERE url='{}';".format(url)
-            self.db.cur.execute(q)
-            self.db.conn.commit()
+            self.db.cud_query(q)
             return 1
         else:
             return 0
 
     def delete_visita(self, url):
         q = "DELETE FROM visitas WHERE url_post='{}';".format(url)
-        self.db.cur.execute(q)
-        self.db.conn.commit()
+        self.db.cud_query(q)
 
     def delete_tag_post(self, post, tag=None):
         q = "DELETE FROM post_tags WHERE post='{}'{};".format(post, '{}')
@@ -265,5 +271,4 @@ class Database_access:
             q = q.format(' AND tag={}'.format(tag))
         else:
             q = q.format('')
-        self.db.cur.execute(q)
-        self.db.conn.commit()
+        self.db.cud_query(q)
